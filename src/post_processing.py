@@ -1,5 +1,8 @@
-# Written by Aaron Barge
-# Copyright 2022
+"""Contains all the necessary methods for performing some post processing on the Strange Attractor image.
+
+Written by Aaron Barge
+Copyright 2022
+"""
 
 
 import numpy

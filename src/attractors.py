@@ -1,28 +1,35 @@
-# Written by Aaron Barge
-# Copyright 2022
+"""Contains all the childen of the Attractor and DifferentialAttractor ABCs.
+
+Written by Aaron Barge
+Copyright 2022
+"""
 
 
 import math
 import sys
 from abc import ABC, abstractmethod
+from typing import Tuple
 
 import numpy
 
 from configs import CONFIGS
 
 
+Vector = Tuple[float, float, float]
+
+
 class Attractor(ABC):
     @abstractmethod
-    def iterate(self, x, y, z):
+    def iterate(self, x: float, y: float, z: float) -> Vector:
         pass
 
 
 class DifferentialAttractor(Attractor, ABC):
     @abstractmethod
-    def slope(self, x, y, z):
+    def slope(self, x: float, y: float, z: float) -> Vector:
         pass
 
-    def iterate(self, x, y, z):
+    def iterate(self, x: float, y: float, z: float) -> Vector:
         k1, j1, i1 = self.slope(x, y, z)
         k2, j2, i2 = self.slope(
             x + 0.5 * CONFIGS["TIME_STEP"] * k1,
@@ -47,13 +54,13 @@ class DifferentialAttractor(Attractor, ABC):
 
 
 class Clifford(Attractor):
-    def __init__(self, a, b, c, d):
+    def __init__(self, a: float, b: float, c: float, d: float):
         self.a = a
         self.b = b
         self.c = c
         self.d = d
 
-    def iterate(self, x, y, z):
+    def iterate(self, x: float, y: float, z: float) -> Vector:
         return (numpy.sin(self.a * y) + self.c * numpy.cos(self.a * x),
             numpy.sin(self.b * x) + self.d * numpy.cos(self.b * y),
             0.0
@@ -61,13 +68,13 @@ class Clifford(Attractor):
 
 
 class Dejong(Attractor):
-    def __init__(self, a, b, c, d):
+    def __init__(self, a: float, b: float, c: float, d: float):
         self.a = a
         self.b = b
         self.c = c
         self.d = d
 
-    def iterate(self, x, y, z):
+    def iterate(self, x: float, y: float, z: float) -> Vector:
         return (numpy.sin(self.a * y) - numpy.cos(self.b * x),
             numpy.sin(self.c * x) - numpy.cos(self.d * y),
             0.0
@@ -75,10 +82,10 @@ class Dejong(Attractor):
 
 
 class Thomas(DifferentialAttractor):
-    def __init__(self, b):
+    def __init__(self, b: float):
         self.b = b
 
-    def slope(self, x, y, z):
+    def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             numpy.sin(y) - self.b * x,
             numpy.sin(z) - self.b * y,
@@ -87,16 +94,16 @@ class Thomas(DifferentialAttractor):
 
 
 class ThomasEuler(Thomas):
-    def __init__(self, b):
+    def __init__(self, b: float):
         self.b = b
     
-    def iterate(self, x, y, z):
+    def iterate(self, x: float, y: float, z: float) -> Vector:
         (dx, dy, dz) = super().slope(x, y, z)
         return (x + dx, y + dy, z + dz)
 
 
 class Aizawa(DifferentialAttractor):
-    def __init__(self, a, b, c, d, e, f):
+    def __init__(self, a: float, b: float, c: float, d: float, e: float, f: float):
         self.a = a
         self.b = b
         self.c = c
@@ -104,23 +111,23 @@ class Aizawa(DifferentialAttractor):
         self.e = e
         self.f = f
 
-    def slope(self, x, y, z):
+    def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             (z - self.b) * x - self.d * y,
             self.d * x + (z - self.b) * y,
-            (self.c + self.a * z - math.pow(z, 3) / 3
-                - (math.pow(x, 2) + math.pow(y, 2)) * (1 + self.e * z) + self.f * z * math.pow(x, 3)
+            (self.c + self.a * z - math.pow(z, 3) / 3 - (math.pow(x, 2) + math.pow(y, 2))
+                * (1 + self.e * z) + self.f * z * math.pow(x, 3)
             )
         )
 
 
 class Lorenz(DifferentialAttractor):
-    def __init__(self, sigma, phi, beta):
+    def __init__(self, sigma: float, phi: float, beta: float):
         self.sigma = sigma
         self.phi = phi
         self.beta = beta
 
-    def slope(self, x, y, z):
+    def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             self.sigma * (y - x),
             -x * z + self.phi * x - y,
@@ -129,14 +136,14 @@ class Lorenz(DifferentialAttractor):
 
 
 class Dadras(DifferentialAttractor):
-    def __init__(self, a, b, c, d, e):
+    def __init__(self, a: float, b: float, c: float, d: float, e: float):
         self.a = a
         self.b = b
         self.c = c
         self.d = d
         self.e = e
 
-    def slope(self, x, y, z):
+    def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             y - self.a * x + self.b * y * z,
             self.c * y - x * z + z,
@@ -145,12 +152,12 @@ class Dadras(DifferentialAttractor):
 
 
 class Chen(DifferentialAttractor):
-    def __init__(self, alpha, beta, gamma):
+    def __init__(self, alpha: float, beta: float, gamma: float):
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
 
-    def slope(self, x, y, z):
+    def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             self.alpha * x - y * z,
             self.beta * y + x * z,
@@ -159,13 +166,13 @@ class Chen(DifferentialAttractor):
 
 
 class Lorenz83(DifferentialAttractor):
-    def __init__(self, a, b, f, g):
+    def __init__(self, a: float, b: float, f: float, g: float):
         self.a = a
         self.b = b
         self.f = f
         self.g = g
 
-    def slope(self, x, y, z):
+    def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             -self.a * x - y ** 2 - z ** 2 + self.a * self.f,
             -y + x * y - self.b * x * z + self.g,
@@ -174,12 +181,12 @@ class Lorenz83(DifferentialAttractor):
 
 
 class Rossler(DifferentialAttractor):
-    def __init__(self, a, b, c):
+    def __init__(self, a: float, b: float, c: float):
         self.a = a
         self.b = b
         self.c = c
 
-    def slope(self, x, y, z):
+    def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             -y - z,
             x + self.a * y,
@@ -188,10 +195,10 @@ class Rossler(DifferentialAttractor):
 
 
 class Halvorsen(DifferentialAttractor):
-    def __init__(self, a):
+    def __init__(self, a: float):
         self.a = a
 
-    def slope(self, x, y, z):
+    def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             -self.a * x - 4 * y - 4 * z - y ** 2,
             -self.a * y - 4 * z - 4 * x - z ** 2,
@@ -200,11 +207,11 @@ class Halvorsen(DifferentialAttractor):
 
 
 class RabinovichFabrikant(DifferentialAttractor):
-    def __init__(self, alpha, gamma):
+    def __init__(self, alpha: float, gamma: float):
         self.alpha = alpha
         self.gamma = gamma
 
-    def slope(self, x, y, z):
+    def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             y * (z - 1 + x ** 2) + self.gamma * x,
             x * (3 * z + 1 - x ** 2) + self.gamma * y,
@@ -213,7 +220,7 @@ class RabinovichFabrikant(DifferentialAttractor):
 
 
 class TSUCS(DifferentialAttractor):
-    def __init__(self, a, b, c, d, e, f):
+    def __init__(self, a: float, b: float, c: float, d: float, e: float, f: float):
         self.a = a
         self.b = b
         self.c = c
@@ -221,7 +228,7 @@ class TSUCS(DifferentialAttractor):
         self.e = e
         self.f = f
 
-    def slope(self, x, y, z):
+    def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             self.a * (y - x) + self.d * x * z,
             self.b * x - x * z + self.f * y,
@@ -230,11 +237,11 @@ class TSUCS(DifferentialAttractor):
 
 
 class Sprott(DifferentialAttractor):
-    def __init__(self, a, b):
+    def __init__(self, a: float, b: float):
         self.a = a
         self.b = b
 
-    def slope(self, x, y, z):
+    def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             y + self.a * x * y + x * z,
             1 - self.b * x ** 2 + y * z,
@@ -243,12 +250,12 @@ class Sprott(DifferentialAttractor):
 
 
 class FourWing(DifferentialAttractor):
-    def __init__(self, a, b, c):
+    def __init__(self, a: float, b: float, c: float):
         self.a = a
         self.b = b
         self.c = c
 
-    def slope(self, x, y, z):
+    def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             self.a * x + y * z,
             self.b * x + self.c * y - x * z,
@@ -257,4 +264,5 @@ class FourWing(DifferentialAttractor):
 
 
 def get_attractor(name):
+    """Returns a class defined in this module from its name."""
     return getattr(sys.modules[__name__], name)

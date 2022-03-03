@@ -1,10 +1,15 @@
-# Written by Aaron Barge
-# Copyright 2022
+"""Contains the custom colormaps to be registered to matplotlib.
+
+Written by Aaron Barge
+Copyright 2022
+"""
 
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
+
+from typing import List
 
 CUSTOM_COLORMAPS = [
     mpl.colors.LinearSegmentedColormap("kryptonite",{"red":[(0,0.01176,0.01176),(0.125,0.01176,0.01176),(0.25,0.01176,0.01176),(0.375,0,0),(0.5,0,0),(0.625,0.18824,0.18824),(0.75,0.41961,0.41961),(0.875,0.70588,0.70588),(1,0.88235,0.88235),],"green":[(0,0,0),(0.125,0.27059,0.27059),(0.25,0.51765,0.51765),(0.375,0.6902,0.6902),(0.5,0.80392,0.80392),(0.625,0.89412,0.89412),(0.75,1,1),(0.875,0.99216,0.99216),(1,1,1),],"blue":[(0,0,0),(0.125,0,0),(0.25,0,0),(0.375,0,0),(0.5,0.01961,0.01961),(0.625,0.01176,0.01176),(0.75,0,0),(0.875,0.07843,0.07843),(1,0.50196,0.50196),],"alpha":[(0,1.00784,1.00784),(0.125,1,1),(0.25,1,1),(0.375,1,1),(0.5,1,1),(0.625,1,1),(0.75,1,1),(0.875,1,1),(1,1,1),]},256),
@@ -21,7 +26,7 @@ def register_custom_colormaps():
         mpl.colormaps.register(cmap)
 
 
-def plot_color_gradients(cmap_list):
+def plot_color_gradients(cmap_list: List[mpl.colors.Colormap]):
     gradient = np.linspace(0, 1, 256)
     gradient = np.vstack((gradient, gradient))
     # Create figure and adjust figure height to number of colormaps

@@ -1,5 +1,8 @@
-# Written by Aaron Barge
-# Copyright 2022
+"""The main process for generating images of Strange Attractors.
+
+Written by Aaron Barge
+Copyright 2022
+"""
 
 
 import functools

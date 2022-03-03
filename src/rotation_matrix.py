@@ -1,15 +1,18 @@
-# Written by Aaron Barge
-# Copyright 2022
+"""Contains some methods for generating a rotation matrix for the points of the Strange Attractor simulation.
+
+Written by Aaron Barge
+Copyright 2022
+"""
 
 
 import numpy
 
 
-def degrees_to_radians(deg):
+def degrees_to_radians(deg: float) -> float:
     return deg / 180 * numpy.pi
 
 
-def generate_rotation_matrix(alpha, beta, gamma):
+def generate_rotation_matrix(alpha: float, beta: float, gamma: float) -> numpy.array:
     return numpy.array((
         (
             numpy.cos(beta) * numpy.cos(gamma),

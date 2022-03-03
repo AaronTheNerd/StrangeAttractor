@@ -1,5 +1,8 @@
-# Written by Aaron Barge
-# Copyright 2022
+"""Contains a class for creating command line loading bars.
+
+Written by Aaron Barge
+Copyright 2022
+"""
 
 
 class LoadingBar:

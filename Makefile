@@ -1,3 +1,6 @@
+# Written by Aaron Barge
+# Copyright 2022
+
 PIPENV = pipenv
 PYTHON = $(PIPENV) run python
 

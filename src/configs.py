@@ -1,5 +1,8 @@
-# Written by Aaron Barge
-# Copyright 2022
+"""Contains the loaded configs.yaml file as CONFIGS along with some shortcuts.
+
+Written by Aaron Barge
+Copyright 2022
+"""
 
 
 import random

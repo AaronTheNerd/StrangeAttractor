@@ -1,5 +1,8 @@
-# Written by Aaron Barge
-# Copyright 2022
+"""Contains a method to generate points uniformly within a sphere.
+
+Written by Aaron Barge
+Copyright 2022
+"""
 
 
 import random
