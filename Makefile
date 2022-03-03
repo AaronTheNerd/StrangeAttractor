@@ -24,6 +24,8 @@ install:
 
 docs: 
 	$(PYTHON) -m $(PDOC) $(PDOC_FLAGS) src
+	mv -v docs/src/* docs
+	rm -r docs/src
 
 clean:
 	rm -rf html
