@@ -19,16 +19,24 @@ Vector = Tuple[float, float, float]
 
 
 class Attractor(ABC):
-    """Represents attractors which are governed by discrete functions."""
+    """Represents attractors which are governed by discrete functions.
+    i.e. $$\hat{v}_{n+1} = f(\hat{v}_n)$$
+    """
     @abstractmethod
     def iterate(self, x: float, y: float, z: float) -> Vector:
         pass
 
 
 class DifferentialAttractor(Attractor, ABC):
-    """Represents attractors which are governed by differential functions.
-    
-    Uses a fourth-order Runge Kutta method to approximate the positions of the particle.
+    """Represents attractors which are governed by differential functions using a fourth-order Runge Kutta method to approximate the positions of the particle. i.e.
+    $$\\frac{d\hat{v}}{dt} = f(\hat{v})$$
+    which is discretely approximated by 
+    $$\hat{v}_{n+1} = \\frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)$$
+    where
+    $$\hat{k}_1 = f(\hat{v}_n)$$
+    $$\hat{k}_2 = f(\hat{v}_n + 0.5\Delta t\hat{k}_1)$$
+    $$\hat{k}_3 = f(\hat{v}_n + 0.5\Delta t\hat{k}_2)$$
+    $$\hat{k}_4 = f(\hat{v}_n + \Delta t\hat{k}_3)$$
     """
     @abstractmethod
     def slope(self, x: float, y: float, z: float) -> Vector:
@@ -59,6 +67,9 @@ class DifferentialAttractor(Attractor, ABC):
 
 
 class Clifford(Attractor):
+    """$$x_{n+1} = \sin(ay_n)+c\cos(a x_n)$$
+    $$y_{n+1} = \sin(bx_n) + d\cos(by_n)$$
+    """
     def __init__(self, a: float, b: float, c: float, d: float):
         self.a = a
         self.b = b
@@ -73,6 +84,9 @@ class Clifford(Attractor):
 
 
 class Dejong(Attractor):
+    """$$x_{n+1} = \sin(ay_n) - \cos(bx_n)$$
+    $$y_{n+1} = \sin(cx_n) - \cos(dy_n)$$
+    """
     def __init__(self, a: float, b: float, c: float, d: float):
         self.a = a
         self.b = b
@@ -87,6 +101,10 @@ class Dejong(Attractor):
 
 
 class Thomas(DifferentialAttractor):
+    """$$\\frac{dx}{dt} = \sin(y) - bx$$
+    $$\\frac{dy}{dt} = \sin(z) - by$$
+    $$\\frac{dz}{dt} = \sin(x) - bz$$
+    """
     def __init__(self, b: float):
         self.b = b
 
@@ -99,6 +117,11 @@ class Thomas(DifferentialAttractor):
 
 
 class ThomasEuler(Thomas):
+    """A special version of the Thomas Attractor which uses Euler Integration instead of Runge-Kutta
+    $$x_{n+1} = x_n + \sin(y_n) - bx_n$$
+    $$y_{n+1} = y_n + \sin(z_n) - by_n$$
+    $$z_{n+1} = z_n + \sin(x_n) - bz_n$$
+    """
     def __init__(self, b: float):
         self.b = b
     
@@ -108,6 +131,10 @@ class ThomasEuler(Thomas):
 
 
 class Aizawa(DifferentialAttractor):
+    """$$\\frac{dx}{dt} = (z-b)x-dy$$
+    $$\\frac{dy}{dt} = dx + (z-b)y$$
+    $$\\frac{dz}{dt} = c+az - \\frac{z^3}{3}-(x^2+y^2)(1+ez)+fzx^3$$
+    """
     def __init__(self, a: float, b: float, c: float, d: float, e: float, f: float):
         self.a = a
         self.b = b
@@ -127,20 +154,28 @@ class Aizawa(DifferentialAttractor):
 
 
 class Lorenz(DifferentialAttractor):
-    def __init__(self, sigma: float, phi: float, beta: float):
+    """$$\\frac{dx}{dt} = \sigma * (y-x)$$
+    $$\\frac{dy}{dt} = -xz+x\\rho-y$$
+    $$\\frac{dz}{dt} = xy-z\\beta$$
+    """
+    def __init__(self, sigma: float, rho: float, beta: float):
         self.sigma = sigma
-        self.phi = phi
+        self.rho = rho
         self.beta = beta
 
     def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             self.sigma * (y - x),
-            -x * z + self.phi * x - y,
+            -x * z + self.rho * x - y,
             x * y - self.beta * z
         )
 
 
 class Dadras(DifferentialAttractor):
+    """$$\\frac{dx}{dt} = y-ax+byz$$
+    $$\\frac{dy}{dt} = cy-xz+z$$
+    $$\\frac{dz}{dt} = dxy-ez$$
+    """
     def __init__(self, a: float, b: float, c: float, d: float, e: float):
         self.a = a
         self.b = b
@@ -157,20 +192,28 @@ class Dadras(DifferentialAttractor):
 
 
 class Chen(DifferentialAttractor):
-    def __init__(self, alpha: float, beta: float, gamma: float):
+    """$$\\frac{dx}{dt} = \\alpha x-yz$$
+    $$\\frac{dy}{dt} = \\beta y+xz$$
+    $$\\frac{dz}{dt} = \delta z+xy/3$$
+    """
+    def __init__(self, alpha: float, beta: float, delta: float):
         self.alpha = alpha
         self.beta = beta
-        self.gamma = gamma
+        self.delta = delta
 
     def slope(self, x: float, y: float, z: float) -> Vector:
         return (
             self.alpha * x - y * z,
             self.beta * y + x * z,
-            self.gamma * z + x * y / 3
+            self.delta * z + x * y / 3
         )
 
 
 class Lorenz83(DifferentialAttractor):
+    """$$\\frac{dx}{dt} = -ax-y^2-z^2+af$$
+    $$\\frac{dy}{dt} = -y+xy-bxz+g$$
+    $$\\frac{dz}{dt} = -z+bxy+xz$$
+    """
     def __init__(self, a: float, b: float, f: float, g: float):
         self.a = a
         self.b = b
@@ -181,11 +224,15 @@ class Lorenz83(DifferentialAttractor):
         return (
             -self.a * x - y ** 2 - z ** 2 + self.a * self.f,
             -y + x * y - self.b * x * z + self.g,
-            -z + self.b * x * z + x * z
+            -z + self.b * x * y + x * z
         )
 
 
 class Rossler(DifferentialAttractor):
+    """$$\\frac{dx}{dt} = -y-z$$
+    $$\\frac{dy}{dt} = x+ay$$
+    $$\\frac{dz}{dt} = b+z(x-c)$$
+    """
     def __init__(self, a: float, b: float, c: float):
         self.a = a
         self.b = b
@@ -200,6 +247,10 @@ class Rossler(DifferentialAttractor):
 
 
 class Halvorsen(DifferentialAttractor):
+    """$$\\frac{dx}{dt} = -ax-4y-4z-y^2$$
+    $$\\frac{dy}{dt} = -ay-4z-4x-z^2$$
+    $$\\frac{dz}{dt} = -az-4x-4y-x^2$$
+    """
     def __init__(self, a: float):
         self.a = a
 
@@ -212,6 +263,10 @@ class Halvorsen(DifferentialAttractor):
 
 
 class RabinovichFabrikant(DifferentialAttractor):
+    """$$\\frac{dx}{dt} = y(z-1+x^2)+\gamma x$$
+    $$\\frac{dy}{dt} = x(3z+1-x^2)+\gamma y$$
+    $$\\frac{dz}{dt} = -2z(\\alpha+xy)$$
+    """
     def __init__(self, alpha: float, gamma: float):
         self.alpha = alpha
         self.gamma = gamma
@@ -225,6 +280,11 @@ class RabinovichFabrikant(DifferentialAttractor):
 
 
 class TSUCS(DifferentialAttractor):
+    """Three-Scroll unified Chaotic System
+    $$\\frac{dx}{dt} = a(y-x)+dxz$$
+    $$\\frac{dy}{dt} = bx-xz+fy$$
+    $$\\frac{dz}{dt} = cz+xy-ex^2$$
+    """
     def __init__(self, a: float, b: float, c: float, d: float, e: float, f: float):
         self.a = a
         self.b = b
@@ -242,6 +302,10 @@ class TSUCS(DifferentialAttractor):
 
 
 class Sprott(DifferentialAttractor):
+    """$$\\frac{dx}{dt} = y+axy+xz$$
+    $$\\frac{dy}{dt} = 1-bx^2+yz$$
+    $$\\frac{dz}{dt} = x-x^2-y^2$$
+    """
     def __init__(self, a: float, b: float):
         self.a = a
         self.b = b
@@ -255,6 +319,10 @@ class Sprott(DifferentialAttractor):
 
 
 class FourWing(DifferentialAttractor):
+    """$$\\frac{dx}{dt} = ax+yz$$
+    $$\\frac{dy}{dt} = bx+cy-xz$$
+    $$\\frac{dz}{dt} = -z-xy$$
+    """
     def __init__(self, a: float, b: float, c: float):
         self.a = a
         self.b = b
