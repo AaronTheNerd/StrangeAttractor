@@ -3,10 +3,15 @@
 
 PIPENV = pipenv
 PYTHON = $(PIPENV) run python
+PDOC = pdoc
+PDOC_FLAGS = --force --config latex_math=True --config sort_identifiers=False --output-dir docs --html
 
-.PHONY: run preview_cmaps install
+SRC_FILES = $(wildcard src/*.py)
+DOC_FILES = $(subst py,html,$(subst src,html,$(SRC_FILES)))
 
-all: run
+.PHONY: run preview_cmaps install docs clean
+
+all: run docs
 
 run:
 	$(PYTHON) -m src.main
@@ -16,3 +21,9 @@ preview_cmaps:
 
 install:
 	$(PIPENV) install
+
+docs: 
+	$(PYTHON) -m $(PDOC) $(PDOC_FLAGS) src
+
+clean:
+	rm -rf html

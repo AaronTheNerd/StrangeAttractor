@@ -1,0 +1,1547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>src.attractors API documentation</title>
+<meta name="description" content="Contains all the childen of the Attractor and DifferentialAttractor ABCs …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.attractors</code></h1>
+</header>
+<section id="section-intro">
+<p>Contains all the childen of the Attractor and DifferentialAttractor ABCs.</p>
+<p>Written by Aaron Barge
+Copyright 2022</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;Contains all the childen of the Attractor and DifferentialAttractor ABCs.
+
+Written by Aaron Barge
+Copyright 2022
+&#34;&#34;&#34;
+
+
+import math
+import sys
+from abc import ABC, abstractmethod
+from typing import Tuple
+
+import numpy
+
+from src.configs import CONFIGS
+
+
+Vector = Tuple[float, float, float]
+
+
+class Attractor(ABC):
+    &#34;&#34;&#34;Represents attractors which are governed by discrete functions.
+    i.e. $$\hat{v}_{n+1} = f(\hat{v}_n)$$
+    &#34;&#34;&#34;
+    @abstractmethod
+    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+        pass
+
+
+class DifferentialAttractor(Attractor, ABC):
+    &#34;&#34;&#34;Represents attractors which are governed by differential functions using a fourth-order Runge Kutta method to approximate the positions of the particle. i.e.
+    $$\\frac{d\hat{v}}{dt} = f(\hat{v})$$
+    which is discretely approximated by 
+    $$\hat{v}_{n+1} = \\frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)$$
+    where
+    $$\hat{k}_1 = f(\hat{v}_n)$$
+    $$\hat{k}_2 = f(\hat{v}_n + 0.5\Delta t\hat{k}_1)$$
+    $$\hat{k}_3 = f(\hat{v}_n + 0.5\Delta t\hat{k}_2)$$
+    $$\hat{k}_4 = f(\hat{v}_n + \Delta t\hat{k}_3)$$
+    &#34;&#34;&#34;
+    @abstractmethod
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        pass
+
+    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+        k1, j1, i1 = self.slope(x, y, z)
+        k2, j2, i2 = self.slope(
+            x + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * k1,
+            y + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * j1,
+            z + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * i1
+        )
+        k3, j3, i3 = self.slope(
+            x + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * k2,
+            y + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * j2,
+            z + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * i2
+        )
+        k4, j4, i4 = self.slope(
+            x + CONFIGS[&#34;TIME_STEP&#34;] * k3,
+            y + CONFIGS[&#34;TIME_STEP&#34;] * j3,
+            z + CONFIGS[&#34;TIME_STEP&#34;] * i3
+        )
+        return (
+            x + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (k1 + 2 * k2 + 2 * k3 + k4),
+            y + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (j1 + 2 * j2 + 2 * j3 + j4),
+            z + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (i1 + 2 * i2 + 2 * i3 + i4)
+        )
+
+
+class Clifford(Attractor):
+    &#34;&#34;&#34;$$x_{n+1} = \sin(ay_n)+c\cos(a x_n)$$
+    $$y_{n+1} = \sin(bx_n) + d\cos(by_n)$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float, d: float):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+
+    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+        return (numpy.sin(self.a * y) + self.c * numpy.cos(self.a * x),
+            numpy.sin(self.b * x) + self.d * numpy.cos(self.b * y),
+            0.0
+        )
+
+
+class Dejong(Attractor):
+    &#34;&#34;&#34;$$x_{n+1} = \sin(ay_n) - \cos(bx_n)$$
+    $$y_{n+1} = \sin(cx_n) - \cos(dy_n)$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float, d: float):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+
+    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+        return (numpy.sin(self.a * y) - numpy.cos(self.b * x),
+            numpy.sin(self.c * x) - numpy.cos(self.d * y),
+            0.0
+        )
+
+
+class Thomas(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = \sin(y) - bx$$
+    $$\\frac{dy}{dt} = \sin(z) - by$$
+    $$\\frac{dz}{dt} = \sin(x) - bz$$
+    &#34;&#34;&#34;
+    def __init__(self, b: float):
+        self.b = b
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            numpy.sin(y) - self.b * x,
+            numpy.sin(z) - self.b * y,
+            numpy.sin(x) - self.b * z
+        )
+
+
+class ThomasEuler(Thomas):
+    &#34;&#34;&#34;A special version of the Thomas Attractor which uses Euler Integration instead of Runge-Kutta
+    $$x_{n+1} = x_n + \sin(y_n) - bx_n$$
+    $$y_{n+1} = y_n + \sin(z_n) - by_n$$
+    $$z_{n+1} = z_n + \sin(x_n) - bz_n$$
+    &#34;&#34;&#34;
+    def __init__(self, b: float):
+        self.b = b
+    
+    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+        (dx, dy, dz) = super().slope(x, y, z)
+        return (x + dx, y + dy, z + dz)
+
+
+class Aizawa(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = (z-b)x-dy$$
+    $$\\frac{dy}{dt} = dx + (z-b)y$$
+    $$\\frac{dz}{dt} = c+az - \\frac{z^3}{3}-(x^2+y^2)(1+ez)+fzx^3$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float, d: float, e: float, f: float):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+        self.e = e
+        self.f = f
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            (z - self.b) * x - self.d * y,
+            self.d * x + (z - self.b) * y,
+            (self.c + self.a * z - math.pow(z, 3) / 3 - (math.pow(x, 2) + math.pow(y, 2))
+                * (1 + self.e * z) + self.f * z * math.pow(x, 3)
+            )
+        )
+
+
+class Lorenz(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = \sigma * (y-x)$$
+    $$\\frac{dy}{dt} = -xz+x\\rho-y$$
+    $$\\frac{dz}{dt} = xy-z\\beta$$
+    &#34;&#34;&#34;
+    def __init__(self, sigma: float, rho: float, beta: float):
+        self.sigma = sigma
+        self.rho = rho
+        self.beta = beta
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            self.sigma * (y - x),
+            -x * z + self.rho * x - y,
+            x * y - self.beta * z
+        )
+
+
+class Dadras(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = y-ax+byz$$
+    $$\\frac{dy}{dt} = cy-xz+z$$
+    $$\\frac{dz}{dt} = dxy-ez$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float, d: float, e: float):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+        self.e = e
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            y - self.a * x + self.b * y * z,
+            self.c * y - x * z + z,
+            self.d * x * y - self.e * z
+        )
+
+
+class Chen(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = \\alpha x-yz$$
+    $$\\frac{dy}{dt} = \\beta y+xz$$
+    $$\\frac{dz}{dt} = \delta z+xy/3$$
+    &#34;&#34;&#34;
+    def __init__(self, alpha: float, beta: float, delta: float):
+        self.alpha = alpha
+        self.beta = beta
+        self.delta = delta
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            self.alpha * x - y * z,
+            self.beta * y + x * z,
+            self.delta * z + x * y / 3
+        )
+
+
+class Lorenz83(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = -ax-y^2-z^2+af$$
+    $$\\frac{dy}{dt} = -y+xy-bxz+g$$
+    $$\\frac{dz}{dt} = -z+bxy+xz$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, f: float, g: float):
+        self.a = a
+        self.b = b
+        self.f = f
+        self.g = g
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            -self.a * x - y ** 2 - z ** 2 + self.a * self.f,
+            -y + x * y - self.b * x * z + self.g,
+            -z + self.b * x * y + x * z
+        )
+
+
+class Rossler(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = -y-z$$
+    $$\\frac{dy}{dt} = x+ay$$
+    $$\\frac{dz}{dt} = b+z(x-c)$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float):
+        self.a = a
+        self.b = b
+        self.c = c
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            -y - z,
+            x + self.a * y,
+            self.b + z * (x - self.c)
+        )
+
+
+class Halvorsen(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = -ax-4y-4z-y^2$$
+    $$\\frac{dy}{dt} = -ay-4z-4x-z^2$$
+    $$\\frac{dz}{dt} = -az-4x-4y-x^2$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float):
+        self.a = a
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            -self.a * x - 4 * y - 4 * z - y ** 2,
+            -self.a * y - 4 * z - 4 * x - z ** 2,
+            -self.a * z - 4 * x - 4 * y - x ** 2
+        )
+
+
+class RabinovichFabrikant(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = y(z-1+x^2)+\gamma x$$
+    $$\\frac{dy}{dt} = x(3z+1-x^2)+\gamma y$$
+    $$\\frac{dz}{dt} = -2z(\\alpha+xy)$$
+    &#34;&#34;&#34;
+    def __init__(self, alpha: float, gamma: float):
+        self.alpha = alpha
+        self.gamma = gamma
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            y * (z - 1 + x ** 2) + self.gamma * x,
+            x * (3 * z + 1 - x ** 2) + self.gamma * y,
+            -2 * z * (self.alpha + x * y)
+        )
+
+
+class TSUCS(DifferentialAttractor):
+    &#34;&#34;&#34;Three-Scroll unified Chaotic System
+    $$\\frac{dx}{dt} = a(y-x)+dxz$$
+    $$\\frac{dy}{dt} = bx-xz+fy$$
+    $$\\frac{dz}{dt} = cz+xy-ex^2$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float, d: float, e: float, f: float):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+        self.e = e
+        self.f = f
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            self.a * (y - x) + self.d * x * z,
+            self.b * x - x * z + self.f * y,
+            self.c * z + x * y - self.e * x ** 2
+        )
+
+
+class Sprott(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = y+axy+xz$$
+    $$\\frac{dy}{dt} = 1-bx^2+yz$$
+    $$\\frac{dz}{dt} = x-x^2-y^2$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float):
+        self.a = a
+        self.b = b
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            y + self.a * x * y + x * z,
+            1 - self.b * x ** 2 + y * z,
+            x - x ** 2 - y ** 2
+        )
+
+
+class FourWing(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = ax+yz$$
+    $$\\frac{dy}{dt} = bx+cy-xz$$
+    $$\\frac{dz}{dt} = -z-xy$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float):
+        self.a = a
+        self.b = b
+        self.c = c
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            self.a * x + y * z,
+            self.b * x + self.c * y - x * z,
+            -z - x * y
+        )
+
+
+def get_attractor(name):
+    &#34;&#34;&#34;Returns a class defined in this module from its name.&#34;&#34;&#34;
+    return getattr(sys.modules[__name__], name)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="src.attractors.get_attractor"><code class="name flex">
+<span>def <span class="ident">get_attractor</span></span>(<span>name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a class defined in this module from its name.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_attractor(name):
+    &#34;&#34;&#34;Returns a class defined in this module from its name.&#34;&#34;&#34;
+    return getattr(sys.modules[__name__], name)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.attractors.Attractor"><code class="flex name class">
+<span>class <span class="ident">Attractor</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents attractors which are governed by discrete functions.
+i.e. <span><span class="MathJax_Preview">\hat{v}_{n+1} = f(\hat{v}_n)</span><script type="math/tex; mode=display">\hat{v}_{n+1} = f(\hat{v}_n)</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Attractor(ABC):
+    &#34;&#34;&#34;Represents attractors which are governed by discrete functions.
+    i.e. $$\hat{v}_{n+1} = f(\hat{v}_n)$$
+    &#34;&#34;&#34;
+    @abstractmethod
+    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+        pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="src.attractors.Clifford" href="#src.attractors.Clifford">Clifford</a></li>
+<li><a title="src.attractors.Dejong" href="#src.attractors.Dejong">Dejong</a></li>
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.Attractor.iterate"><code class="name flex">
+<span>def <span class="ident">iterate</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    pass</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.DifferentialAttractor"><code class="flex name class">
+<span>class <span class="ident">DifferentialAttractor</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents attractors which are governed by differential functions using a fourth-order Runge Kutta method to approximate the positions of the particle. i.e.
+<span><span class="MathJax_Preview">\frac{d\hat{v}}{dt} = f(\hat{v})</span><script type="math/tex; mode=display">\frac{d\hat{v}}{dt} = f(\hat{v})</script></span>
+which is discretely approximated by
+<span><span class="MathJax_Preview">\hat{v}_{n+1} = \frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)</span><script type="math/tex; mode=display">\hat{v}_{n+1} = \frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)</script></span>
+where
+<span><span class="MathJax_Preview">\hat{k}_1 = f(\hat{v}_n)</span><script type="math/tex; mode=display">\hat{k}_1 = f(\hat{v}_n)</script></span>
+<span><span class="MathJax_Preview">\hat{k}_2 = f(\hat{v}_n + 0.5\Delta t\hat{k}_1)</span><script type="math/tex; mode=display">\hat{k}_2 = f(\hat{v}_n + 0.5\Delta t\hat{k}_1)</script></span>
+<span><span class="MathJax_Preview">\hat{k}_3 = f(\hat{v}_n + 0.5\Delta t\hat{k}_2)</span><script type="math/tex; mode=display">\hat{k}_3 = f(\hat{v}_n + 0.5\Delta t\hat{k}_2)</script></span>
+<span><span class="MathJax_Preview">\hat{k}_4 = f(\hat{v}_n + \Delta t\hat{k}_3)</span><script type="math/tex; mode=display">\hat{k}_4 = f(\hat{v}_n + \Delta t\hat{k}_3)</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DifferentialAttractor(Attractor, ABC):
+    &#34;&#34;&#34;Represents attractors which are governed by differential functions using a fourth-order Runge Kutta method to approximate the positions of the particle. i.e.
+    $$\\frac{d\hat{v}}{dt} = f(\hat{v})$$
+    which is discretely approximated by 
+    $$\hat{v}_{n+1} = \\frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)$$
+    where
+    $$\hat{k}_1 = f(\hat{v}_n)$$
+    $$\hat{k}_2 = f(\hat{v}_n + 0.5\Delta t\hat{k}_1)$$
+    $$\hat{k}_3 = f(\hat{v}_n + 0.5\Delta t\hat{k}_2)$$
+    $$\hat{k}_4 = f(\hat{v}_n + \Delta t\hat{k}_3)$$
+    &#34;&#34;&#34;
+    @abstractmethod
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        pass
+
+    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+        k1, j1, i1 = self.slope(x, y, z)
+        k2, j2, i2 = self.slope(
+            x + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * k1,
+            y + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * j1,
+            z + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * i1
+        )
+        k3, j3, i3 = self.slope(
+            x + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * k2,
+            y + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * j2,
+            z + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * i2
+        )
+        k4, j4, i4 = self.slope(
+            x + CONFIGS[&#34;TIME_STEP&#34;] * k3,
+            y + CONFIGS[&#34;TIME_STEP&#34;] * j3,
+            z + CONFIGS[&#34;TIME_STEP&#34;] * i3
+        )
+        return (
+            x + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (k1 + 2 * k2 + 2 * k3 + k4),
+            y + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (j1 + 2 * j2 + 2 * j3 + j4),
+            z + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (i1 + 2 * i2 + 2 * i3 + i4)
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="src.attractors.Aizawa" href="#src.attractors.Aizawa">Aizawa</a></li>
+<li><a title="src.attractors.Chen" href="#src.attractors.Chen">Chen</a></li>
+<li><a title="src.attractors.Dadras" href="#src.attractors.Dadras">Dadras</a></li>
+<li><a title="src.attractors.FourWing" href="#src.attractors.FourWing">FourWing</a></li>
+<li><a title="src.attractors.Halvorsen" href="#src.attractors.Halvorsen">Halvorsen</a></li>
+<li><a title="src.attractors.Lorenz" href="#src.attractors.Lorenz">Lorenz</a></li>
+<li><a title="src.attractors.Lorenz83" href="#src.attractors.Lorenz83">Lorenz83</a></li>
+<li><a title="src.attractors.RabinovichFabrikant" href="#src.attractors.RabinovichFabrikant">RabinovichFabrikant</a></li>
+<li><a title="src.attractors.Rossler" href="#src.attractors.Rossler">Rossler</a></li>
+<li><a title="src.attractors.Sprott" href="#src.attractors.Sprott">Sprott</a></li>
+<li><a title="src.attractors.TSUCS" href="#src.attractors.TSUCS">TSUCS</a></li>
+<li><a title="src.attractors.Thomas" href="#src.attractors.Thomas">Thomas</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.DifferentialAttractor.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def slope(self, x: float, y: float, z: float) -&gt; Vector:
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.attractors.DifferentialAttractor.iterate"><code class="name flex">
+<span>def <span class="ident">iterate</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    k1, j1, i1 = self.slope(x, y, z)
+    k2, j2, i2 = self.slope(
+        x + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * k1,
+        y + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * j1,
+        z + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * i1
+    )
+    k3, j3, i3 = self.slope(
+        x + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * k2,
+        y + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * j2,
+        z + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * i2
+    )
+    k4, j4, i4 = self.slope(
+        x + CONFIGS[&#34;TIME_STEP&#34;] * k3,
+        y + CONFIGS[&#34;TIME_STEP&#34;] * j3,
+        z + CONFIGS[&#34;TIME_STEP&#34;] * i3
+    )
+    return (
+        x + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (k1 + 2 * k2 + 2 * k3 + k4),
+        y + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (j1 + 2 * j2 + 2 * j3 + j4),
+        z + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (i1 + 2 * i2 + 2 * i3 + i4)
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.Clifford"><code class="flex name class">
+<span>class <span class="ident">Clifford</span></span>
+<span>(</span><span>a: float, b: float, c: float, d: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><span><span class="MathJax_Preview">x_{n+1} = \sin(ay_n)+c\cos(a x_n)</span><script type="math/tex; mode=display">x_{n+1} = \sin(ay_n)+c\cos(a x_n)</script></span>
+<span><span class="MathJax_Preview">y_{n+1} = \sin(bx_n) + d\cos(by_n)</span><script type="math/tex; mode=display">y_{n+1} = \sin(bx_n) + d\cos(by_n)</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Clifford(Attractor):
+    &#34;&#34;&#34;$$x_{n+1} = \sin(ay_n)+c\cos(a x_n)$$
+    $$y_{n+1} = \sin(bx_n) + d\cos(by_n)$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float, d: float):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+
+    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+        return (numpy.sin(self.a * y) + self.c * numpy.cos(self.a * x),
+            numpy.sin(self.b * x) + self.d * numpy.cos(self.b * y),
+            0.0
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.Clifford.iterate"><code class="name flex">
+<span>def <span class="ident">iterate</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    return (numpy.sin(self.a * y) + self.c * numpy.cos(self.a * x),
+        numpy.sin(self.b * x) + self.d * numpy.cos(self.b * y),
+        0.0
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.Dejong"><code class="flex name class">
+<span>class <span class="ident">Dejong</span></span>
+<span>(</span><span>a: float, b: float, c: float, d: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><span><span class="MathJax_Preview">x_{n+1} = \sin(ay_n) - \cos(bx_n)</span><script type="math/tex; mode=display">x_{n+1} = \sin(ay_n) - \cos(bx_n)</script></span>
+<span><span class="MathJax_Preview">y_{n+1} = \sin(cx_n) - \cos(dy_n)</span><script type="math/tex; mode=display">y_{n+1} = \sin(cx_n) - \cos(dy_n)</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Dejong(Attractor):
+    &#34;&#34;&#34;$$x_{n+1} = \sin(ay_n) - \cos(bx_n)$$
+    $$y_{n+1} = \sin(cx_n) - \cos(dy_n)$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float, d: float):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+
+    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+        return (numpy.sin(self.a * y) - numpy.cos(self.b * x),
+            numpy.sin(self.c * x) - numpy.cos(self.d * y),
+            0.0
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.Dejong.iterate"><code class="name flex">
+<span>def <span class="ident">iterate</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    return (numpy.sin(self.a * y) - numpy.cos(self.b * x),
+        numpy.sin(self.c * x) - numpy.cos(self.d * y),
+        0.0
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.Thomas"><code class="flex name class">
+<span>class <span class="ident">Thomas</span></span>
+<span>(</span><span>b: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><span><span class="MathJax_Preview">\frac{dx}{dt} = \sin(y) - bx</span><script type="math/tex; mode=display">\frac{dx}{dt} = \sin(y) - bx</script></span>
+<span><span class="MathJax_Preview">\frac{dy}{dt} = \sin(z) - by</span><script type="math/tex; mode=display">\frac{dy}{dt} = \sin(z) - by</script></span>
+<span><span class="MathJax_Preview">\frac{dz}{dt} = \sin(x) - bz</span><script type="math/tex; mode=display">\frac{dz}{dt} = \sin(x) - bz</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Thomas(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = \sin(y) - bx$$
+    $$\\frac{dy}{dt} = \sin(z) - by$$
+    $$\\frac{dz}{dt} = \sin(x) - bz$$
+    &#34;&#34;&#34;
+    def __init__(self, b: float):
+        self.b = b
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            numpy.sin(y) - self.b * x,
+            numpy.sin(z) - self.b * y,
+            numpy.sin(x) - self.b * z
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="src.attractors.ThomasEuler" href="#src.attractors.ThomasEuler">ThomasEuler</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.Thomas.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def slope(self, x: float, y: float, z: float) -&gt; Vector:
+    return (
+        numpy.sin(y) - self.b * x,
+        numpy.sin(z) - self.b * y,
+        numpy.sin(x) - self.b * z
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.ThomasEuler"><code class="flex name class">
+<span>class <span class="ident">ThomasEuler</span></span>
+<span>(</span><span>b: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A special version of the Thomas Attractor which uses Euler Integration instead of Runge-Kutta
+<span><span class="MathJax_Preview">x_{n+1} = x_n + \sin(y_n) - bx_n</span><script type="math/tex; mode=display">x_{n+1} = x_n + \sin(y_n) - bx_n</script></span>
+<span><span class="MathJax_Preview">y_{n+1} = y_n + \sin(z_n) - by_n</span><script type="math/tex; mode=display">y_{n+1} = y_n + \sin(z_n) - by_n</script></span>
+<span><span class="MathJax_Preview">z_{n+1} = z_n + \sin(x_n) - bz_n</span><script type="math/tex; mode=display">z_{n+1} = z_n + \sin(x_n) - bz_n</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ThomasEuler(Thomas):
+    &#34;&#34;&#34;A special version of the Thomas Attractor which uses Euler Integration instead of Runge-Kutta
+    $$x_{n+1} = x_n + \sin(y_n) - bx_n$$
+    $$y_{n+1} = y_n + \sin(z_n) - by_n$$
+    $$z_{n+1} = z_n + \sin(x_n) - bz_n$$
+    &#34;&#34;&#34;
+    def __init__(self, b: float):
+        self.b = b
+    
+    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+        (dx, dy, dz) = super().slope(x, y, z)
+        return (x + dx, y + dy, z + dz)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.Thomas" href="#src.attractors.Thomas">Thomas</a></li>
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.ThomasEuler.iterate"><code class="name flex">
+<span>def <span class="ident">iterate</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    (dx, dy, dz) = super().slope(x, y, z)
+    return (x + dx, y + dy, z + dz)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.Aizawa"><code class="flex name class">
+<span>class <span class="ident">Aizawa</span></span>
+<span>(</span><span>a: float, b: float, c: float, d: float, e: float, f: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><span><span class="MathJax_Preview">\frac{dx}{dt} = (z-b)x-dy</span><script type="math/tex; mode=display">\frac{dx}{dt} = (z-b)x-dy</script></span>
+<span><span class="MathJax_Preview">\frac{dy}{dt} = dx + (z-b)y</span><script type="math/tex; mode=display">\frac{dy}{dt} = dx + (z-b)y</script></span>
+<span><span class="MathJax_Preview">\frac{dz}{dt} = c+az - \frac{z^3}{3}-(x^2+y^2)(1+ez)+fzx^3</span><script type="math/tex; mode=display">\frac{dz}{dt} = c+az - \frac{z^3}{3}-(x^2+y^2)(1+ez)+fzx^3</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Aizawa(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = (z-b)x-dy$$
+    $$\\frac{dy}{dt} = dx + (z-b)y$$
+    $$\\frac{dz}{dt} = c+az - \\frac{z^3}{3}-(x^2+y^2)(1+ez)+fzx^3$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float, d: float, e: float, f: float):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+        self.e = e
+        self.f = f
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            (z - self.b) * x - self.d * y,
+            self.d * x + (z - self.b) * y,
+            (self.c + self.a * z - math.pow(z, 3) / 3 - (math.pow(x, 2) + math.pow(y, 2))
+                * (1 + self.e * z) + self.f * z * math.pow(x, 3)
+            )
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.Aizawa.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def slope(self, x: float, y: float, z: float) -&gt; Vector:
+    return (
+        (z - self.b) * x - self.d * y,
+        self.d * x + (z - self.b) * y,
+        (self.c + self.a * z - math.pow(z, 3) / 3 - (math.pow(x, 2) + math.pow(y, 2))
+            * (1 + self.e * z) + self.f * z * math.pow(x, 3)
+        )
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.Lorenz"><code class="flex name class">
+<span>class <span class="ident">Lorenz</span></span>
+<span>(</span><span>sigma: float, rho: float, beta: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><span><span class="MathJax_Preview">\frac{dx}{dt} = \sigma * (y-x)</span><script type="math/tex; mode=display">\frac{dx}{dt} = \sigma * (y-x)</script></span>
+<span><span class="MathJax_Preview">\frac{dy}{dt} = -xz+x\rho-y</span><script type="math/tex; mode=display">\frac{dy}{dt} = -xz+x\rho-y</script></span>
+<span><span class="MathJax_Preview">\frac{dz}{dt} = xy-z\beta</span><script type="math/tex; mode=display">\frac{dz}{dt} = xy-z\beta</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Lorenz(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = \sigma * (y-x)$$
+    $$\\frac{dy}{dt} = -xz+x\\rho-y$$
+    $$\\frac{dz}{dt} = xy-z\\beta$$
+    &#34;&#34;&#34;
+    def __init__(self, sigma: float, rho: float, beta: float):
+        self.sigma = sigma
+        self.rho = rho
+        self.beta = beta
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            self.sigma * (y - x),
+            -x * z + self.rho * x - y,
+            x * y - self.beta * z
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.Lorenz.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def slope(self, x: float, y: float, z: float) -&gt; Vector:
+    return (
+        self.sigma * (y - x),
+        -x * z + self.rho * x - y,
+        x * y - self.beta * z
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.Dadras"><code class="flex name class">
+<span>class <span class="ident">Dadras</span></span>
+<span>(</span><span>a: float, b: float, c: float, d: float, e: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><span><span class="MathJax_Preview">\frac{dx}{dt} = y-ax+byz</span><script type="math/tex; mode=display">\frac{dx}{dt} = y-ax+byz</script></span>
+<span><span class="MathJax_Preview">\frac{dy}{dt} = cy-xz+z</span><script type="math/tex; mode=display">\frac{dy}{dt} = cy-xz+z</script></span>
+<span><span class="MathJax_Preview">\frac{dz}{dt} = dxy-ez</span><script type="math/tex; mode=display">\frac{dz}{dt} = dxy-ez</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Dadras(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = y-ax+byz$$
+    $$\\frac{dy}{dt} = cy-xz+z$$
+    $$\\frac{dz}{dt} = dxy-ez$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float, d: float, e: float):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+        self.e = e
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            y - self.a * x + self.b * y * z,
+            self.c * y - x * z + z,
+            self.d * x * y - self.e * z
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.Dadras.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def slope(self, x: float, y: float, z: float) -&gt; Vector:
+    return (
+        y - self.a * x + self.b * y * z,
+        self.c * y - x * z + z,
+        self.d * x * y - self.e * z
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.Chen"><code class="flex name class">
+<span>class <span class="ident">Chen</span></span>
+<span>(</span><span>alpha: float, beta: float, delta: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><span><span class="MathJax_Preview">\frac{dx}{dt} = \alpha x-yz</span><script type="math/tex; mode=display">\frac{dx}{dt} = \alpha x-yz</script></span>
+<span><span class="MathJax_Preview">\frac{dy}{dt} = \beta y+xz</span><script type="math/tex; mode=display">\frac{dy}{dt} = \beta y+xz</script></span>
+<span><span class="MathJax_Preview">\frac{dz}{dt} = \delta z+xy/3</span><script type="math/tex; mode=display">\frac{dz}{dt} = \delta z+xy/3</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Chen(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = \\alpha x-yz$$
+    $$\\frac{dy}{dt} = \\beta y+xz$$
+    $$\\frac{dz}{dt} = \delta z+xy/3$$
+    &#34;&#34;&#34;
+    def __init__(self, alpha: float, beta: float, delta: float):
+        self.alpha = alpha
+        self.beta = beta
+        self.delta = delta
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            self.alpha * x - y * z,
+            self.beta * y + x * z,
+            self.delta * z + x * y / 3
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.Chen.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def slope(self, x: float, y: float, z: float) -&gt; Vector:
+    return (
+        self.alpha * x - y * z,
+        self.beta * y + x * z,
+        self.delta * z + x * y / 3
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.Lorenz83"><code class="flex name class">
+<span>class <span class="ident">Lorenz83</span></span>
+<span>(</span><span>a: float, b: float, f: float, g: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><span><span class="MathJax_Preview">\frac{dx}{dt} = -ax-y^2-z^2+af</span><script type="math/tex; mode=display">\frac{dx}{dt} = -ax-y^2-z^2+af</script></span>
+<span><span class="MathJax_Preview">\frac{dy}{dt} = -y+xy-bxz+g</span><script type="math/tex; mode=display">\frac{dy}{dt} = -y+xy-bxz+g</script></span>
+<span><span class="MathJax_Preview">\frac{dz}{dt} = -z+bxy+xz</span><script type="math/tex; mode=display">\frac{dz}{dt} = -z+bxy+xz</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Lorenz83(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = -ax-y^2-z^2+af$$
+    $$\\frac{dy}{dt} = -y+xy-bxz+g$$
+    $$\\frac{dz}{dt} = -z+bxy+xz$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, f: float, g: float):
+        self.a = a
+        self.b = b
+        self.f = f
+        self.g = g
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            -self.a * x - y ** 2 - z ** 2 + self.a * self.f,
+            -y + x * y - self.b * x * z + self.g,
+            -z + self.b * x * y + x * z
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.Lorenz83.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def slope(self, x: float, y: float, z: float) -&gt; Vector:
+    return (
+        -self.a * x - y ** 2 - z ** 2 + self.a * self.f,
+        -y + x * y - self.b * x * z + self.g,
+        -z + self.b * x * y + x * z
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.Rossler"><code class="flex name class">
+<span>class <span class="ident">Rossler</span></span>
+<span>(</span><span>a: float, b: float, c: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><span><span class="MathJax_Preview">\frac{dx}{dt} = -y-z</span><script type="math/tex; mode=display">\frac{dx}{dt} = -y-z</script></span>
+<span><span class="MathJax_Preview">\frac{dy}{dt} = x+ay</span><script type="math/tex; mode=display">\frac{dy}{dt} = x+ay</script></span>
+<span><span class="MathJax_Preview">\frac{dz}{dt} = b+z(x-c)</span><script type="math/tex; mode=display">\frac{dz}{dt} = b+z(x-c)</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Rossler(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = -y-z$$
+    $$\\frac{dy}{dt} = x+ay$$
+    $$\\frac{dz}{dt} = b+z(x-c)$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float):
+        self.a = a
+        self.b = b
+        self.c = c
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            -y - z,
+            x + self.a * y,
+            self.b + z * (x - self.c)
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.Rossler.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def slope(self, x: float, y: float, z: float) -&gt; Vector:
+    return (
+        -y - z,
+        x + self.a * y,
+        self.b + z * (x - self.c)
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.Halvorsen"><code class="flex name class">
+<span>class <span class="ident">Halvorsen</span></span>
+<span>(</span><span>a: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><span><span class="MathJax_Preview">\frac{dx}{dt} = -ax-4y-4z-y^2</span><script type="math/tex; mode=display">\frac{dx}{dt} = -ax-4y-4z-y^2</script></span>
+<span><span class="MathJax_Preview">\frac{dy}{dt} = -ay-4z-4x-z^2</span><script type="math/tex; mode=display">\frac{dy}{dt} = -ay-4z-4x-z^2</script></span>
+<span><span class="MathJax_Preview">\frac{dz}{dt} = -az-4x-4y-x^2</span><script type="math/tex; mode=display">\frac{dz}{dt} = -az-4x-4y-x^2</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Halvorsen(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = -ax-4y-4z-y^2$$
+    $$\\frac{dy}{dt} = -ay-4z-4x-z^2$$
+    $$\\frac{dz}{dt} = -az-4x-4y-x^2$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float):
+        self.a = a
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            -self.a * x - 4 * y - 4 * z - y ** 2,
+            -self.a * y - 4 * z - 4 * x - z ** 2,
+            -self.a * z - 4 * x - 4 * y - x ** 2
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.Halvorsen.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def slope(self, x: float, y: float, z: float) -&gt; Vector:
+    return (
+        -self.a * x - 4 * y - 4 * z - y ** 2,
+        -self.a * y - 4 * z - 4 * x - z ** 2,
+        -self.a * z - 4 * x - 4 * y - x ** 2
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.RabinovichFabrikant"><code class="flex name class">
+<span>class <span class="ident">RabinovichFabrikant</span></span>
+<span>(</span><span>alpha: float, gamma: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><span><span class="MathJax_Preview">\frac{dx}{dt} = y(z-1+x^2)+\gamma x</span><script type="math/tex; mode=display">\frac{dx}{dt} = y(z-1+x^2)+\gamma x</script></span>
+<span><span class="MathJax_Preview">\frac{dy}{dt} = x(3z+1-x^2)+\gamma y</span><script type="math/tex; mode=display">\frac{dy}{dt} = x(3z+1-x^2)+\gamma y</script></span>
+<span><span class="MathJax_Preview">\frac{dz}{dt} = -2z(\alpha+xy)</span><script type="math/tex; mode=display">\frac{dz}{dt} = -2z(\alpha+xy)</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RabinovichFabrikant(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = y(z-1+x^2)+\gamma x$$
+    $$\\frac{dy}{dt} = x(3z+1-x^2)+\gamma y$$
+    $$\\frac{dz}{dt} = -2z(\\alpha+xy)$$
+    &#34;&#34;&#34;
+    def __init__(self, alpha: float, gamma: float):
+        self.alpha = alpha
+        self.gamma = gamma
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            y * (z - 1 + x ** 2) + self.gamma * x,
+            x * (3 * z + 1 - x ** 2) + self.gamma * y,
+            -2 * z * (self.alpha + x * y)
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.RabinovichFabrikant.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def slope(self, x: float, y: float, z: float) -&gt; Vector:
+    return (
+        y * (z - 1 + x ** 2) + self.gamma * x,
+        x * (3 * z + 1 - x ** 2) + self.gamma * y,
+        -2 * z * (self.alpha + x * y)
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.TSUCS"><code class="flex name class">
+<span>class <span class="ident">TSUCS</span></span>
+<span>(</span><span>a: float, b: float, c: float, d: float, e: float, f: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Three-Scroll unified Chaotic System
+<span><span class="MathJax_Preview">\frac{dx}{dt} = a(y-x)+dxz</span><script type="math/tex; mode=display">\frac{dx}{dt} = a(y-x)+dxz</script></span>
+<span><span class="MathJax_Preview">\frac{dy}{dt} = bx-xz+fy</span><script type="math/tex; mode=display">\frac{dy}{dt} = bx-xz+fy</script></span>
+<span><span class="MathJax_Preview">\frac{dz}{dt} = cz+xy-ex^2</span><script type="math/tex; mode=display">\frac{dz}{dt} = cz+xy-ex^2</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TSUCS(DifferentialAttractor):
+    &#34;&#34;&#34;Three-Scroll unified Chaotic System
+    $$\\frac{dx}{dt} = a(y-x)+dxz$$
+    $$\\frac{dy}{dt} = bx-xz+fy$$
+    $$\\frac{dz}{dt} = cz+xy-ex^2$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float, d: float, e: float, f: float):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+        self.e = e
+        self.f = f
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            self.a * (y - x) + self.d * x * z,
+            self.b * x - x * z + self.f * y,
+            self.c * z + x * y - self.e * x ** 2
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.TSUCS.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def slope(self, x: float, y: float, z: float) -&gt; Vector:
+    return (
+        self.a * (y - x) + self.d * x * z,
+        self.b * x - x * z + self.f * y,
+        self.c * z + x * y - self.e * x ** 2
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.Sprott"><code class="flex name class">
+<span>class <span class="ident">Sprott</span></span>
+<span>(</span><span>a: float, b: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><span><span class="MathJax_Preview">\frac{dx}{dt} = y+axy+xz</span><script type="math/tex; mode=display">\frac{dx}{dt} = y+axy+xz</script></span>
+<span><span class="MathJax_Preview">\frac{dy}{dt} = 1-bx^2+yz</span><script type="math/tex; mode=display">\frac{dy}{dt} = 1-bx^2+yz</script></span>
+<span><span class="MathJax_Preview">\frac{dz}{dt} = x-x^2-y^2</span><script type="math/tex; mode=display">\frac{dz}{dt} = x-x^2-y^2</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Sprott(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = y+axy+xz$$
+    $$\\frac{dy}{dt} = 1-bx^2+yz$$
+    $$\\frac{dz}{dt} = x-x^2-y^2$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float):
+        self.a = a
+        self.b = b
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            y + self.a * x * y + x * z,
+            1 - self.b * x ** 2 + y * z,
+            x - x ** 2 - y ** 2
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.Sprott.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def slope(self, x: float, y: float, z: float) -&gt; Vector:
+    return (
+        y + self.a * x * y + x * z,
+        1 - self.b * x ** 2 + y * z,
+        x - x ** 2 - y ** 2
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.attractors.FourWing"><code class="flex name class">
+<span>class <span class="ident">FourWing</span></span>
+<span>(</span><span>a: float, b: float, c: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><span><span class="MathJax_Preview">\frac{dx}{dt} = ax+yz</span><script type="math/tex; mode=display">\frac{dx}{dt} = ax+yz</script></span>
+<span><span class="MathJax_Preview">\frac{dy}{dt} = bx+cy-xz</span><script type="math/tex; mode=display">\frac{dy}{dt} = bx+cy-xz</script></span>
+<span><span class="MathJax_Preview">\frac{dz}{dt} = -z-xy</span><script type="math/tex; mode=display">\frac{dz}{dt} = -z-xy</script></span></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FourWing(DifferentialAttractor):
+    &#34;&#34;&#34;$$\\frac{dx}{dt} = ax+yz$$
+    $$\\frac{dy}{dt} = bx+cy-xz$$
+    $$\\frac{dz}{dt} = -z-xy$$
+    &#34;&#34;&#34;
+    def __init__(self, a: float, b: float, c: float):
+        self.a = a
+        self.b = b
+        self.c = c
+
+    def slope(self, x: float, y: float, z: float) -&gt; Vector:
+        return (
+            self.a * x + y * z,
+            self.b * x + self.c * y - x * z,
+            -z - x * y
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></li>
+<li><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.attractors.FourWing.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def slope(self, x: float, y: float, z: float) -&gt; Vector:
+    return (
+        self.a * x + y * z,
+        self.b * x + self.c * y - x * z,
+        -z - x * y
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src" href="index.html">src</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="src.attractors.get_attractor" href="#src.attractors.get_attractor">get_attractor</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.attractors.Attractor" href="#src.attractors.Attractor">Attractor</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.Attractor.iterate" href="#src.attractors.Attractor.iterate">iterate</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.DifferentialAttractor" href="#src.attractors.DifferentialAttractor">DifferentialAttractor</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.DifferentialAttractor.slope" href="#src.attractors.DifferentialAttractor.slope">slope</a></code></li>
+<li><code><a title="src.attractors.DifferentialAttractor.iterate" href="#src.attractors.DifferentialAttractor.iterate">iterate</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.Clifford" href="#src.attractors.Clifford">Clifford</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.Clifford.iterate" href="#src.attractors.Clifford.iterate">iterate</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.Dejong" href="#src.attractors.Dejong">Dejong</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.Dejong.iterate" href="#src.attractors.Dejong.iterate">iterate</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.Thomas" href="#src.attractors.Thomas">Thomas</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.Thomas.slope" href="#src.attractors.Thomas.slope">slope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.ThomasEuler" href="#src.attractors.ThomasEuler">ThomasEuler</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.ThomasEuler.iterate" href="#src.attractors.ThomasEuler.iterate">iterate</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.Aizawa" href="#src.attractors.Aizawa">Aizawa</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.Aizawa.slope" href="#src.attractors.Aizawa.slope">slope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.Lorenz" href="#src.attractors.Lorenz">Lorenz</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.Lorenz.slope" href="#src.attractors.Lorenz.slope">slope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.Dadras" href="#src.attractors.Dadras">Dadras</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.Dadras.slope" href="#src.attractors.Dadras.slope">slope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.Chen" href="#src.attractors.Chen">Chen</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.Chen.slope" href="#src.attractors.Chen.slope">slope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.Lorenz83" href="#src.attractors.Lorenz83">Lorenz83</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.Lorenz83.slope" href="#src.attractors.Lorenz83.slope">slope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.Rossler" href="#src.attractors.Rossler">Rossler</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.Rossler.slope" href="#src.attractors.Rossler.slope">slope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.Halvorsen" href="#src.attractors.Halvorsen">Halvorsen</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.Halvorsen.slope" href="#src.attractors.Halvorsen.slope">slope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.RabinovichFabrikant" href="#src.attractors.RabinovichFabrikant">RabinovichFabrikant</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.RabinovichFabrikant.slope" href="#src.attractors.RabinovichFabrikant.slope">slope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.TSUCS" href="#src.attractors.TSUCS">TSUCS</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.TSUCS.slope" href="#src.attractors.TSUCS.slope">slope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.Sprott" href="#src.attractors.Sprott">Sprott</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.Sprott.slope" href="#src.attractors.Sprott.slope">slope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.attractors.FourWing" href="#src.attractors.FourWing">FourWing</a></code></h4>
+<ul class="">
+<li><code><a title="src.attractors.FourWing.slope" href="#src.attractors.FourWing.slope">slope</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

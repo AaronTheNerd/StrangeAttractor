@@ -12,6 +12,7 @@ pyyaml = "*"
 matplotlib = "*"
 scikit-image = "*"
 colorspacious = "*"
+pdoc3 = "*"
 
 [dev-packages]
 
