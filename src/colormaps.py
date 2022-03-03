@@ -1,4 +1,4 @@
-"""Contains the custom colormaps to be registered to matplotlib.
+"""Contains the custom colormaps generated from https://aaronthenerd.github.io/matplotlib_colormap_generator/
 
 Written by Aaron Barge
 Copyright 2022
