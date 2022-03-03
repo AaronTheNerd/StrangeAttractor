@@ -27,5 +27,3 @@ docs:
 	mv -v docs/src/* docs
 	rm -r docs/src
 
-clean:
-	rm -rf html
