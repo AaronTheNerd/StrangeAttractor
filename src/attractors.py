@@ -12,19 +12,24 @@ from typing import Tuple
 
 import numpy
 
-from configs import CONFIGS
+from src.configs import CONFIGS
 
 
 Vector = Tuple[float, float, float]
 
 
 class Attractor(ABC):
+    """Represents attractors which are governed by discrete functions."""
     @abstractmethod
     def iterate(self, x: float, y: float, z: float) -> Vector:
         pass
 
 
 class DifferentialAttractor(Attractor, ABC):
+    """Represents attractors which are governed by differential functions.
+    
+    Uses a fourth-order Runge Kutta method to approximate the positions of the particle.
+    """
     @abstractmethod
     def slope(self, x: float, y: float, z: float) -> Vector:
         pass

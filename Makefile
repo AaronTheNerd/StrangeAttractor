@@ -9,10 +9,10 @@ PYTHON = $(PIPENV) run python
 all: run
 
 run:
-	$(PYTHON) src/main.py
-
+	$(PYTHON) -m src.main
+	
 preview_cmaps: 
-	$(PYTHON) src/colormaps.py
+	$(PYTHON) -m src.colormaps
 
 install:
 	$(PIPENV) install

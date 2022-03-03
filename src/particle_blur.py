@@ -8,11 +8,13 @@ Copyright 2022
 import numpy
 import pandas
 
-from configs import PARTICLE_BLUR_CONFIGS
+from src.configs import PARTICLE_BLUR_CONFIGS
 
 from typing import Dict, List
 
+
 def particle_blur(x: float, y: float) -> Dict[str, List[float]]:
+    """Generates multiple data points to effectively blur particles."""
     d = {'x': [], 'y': [], 'weight': []}
     for i_x in range(-PARTICLE_BLUR_CONFIGS["X_RADIUS"], PARTICLE_BLUR_CONFIGS["X_RADIUS"] + 1):
         for i_y in range(-PARTICLE_BLUR_CONFIGS["Y_RADIUS"], PARTICLE_BLUR_CONFIGS["Y_RADIUS"] + 1):

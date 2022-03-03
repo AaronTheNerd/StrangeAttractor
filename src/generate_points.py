@@ -9,10 +9,11 @@ import random
 
 import numpy
 
-from configs import POINTS_CONFIGS
+from src.configs import POINTS_CONFIGS
 
 
 def generate_points():
+    """Generates random points uniformly within a sphere."""
     points = []
     for _ in range(POINTS_CONFIGS["NUM_OF_POINTS"]):
         r = POINTS_CONFIGS["RADIUS"] * numpy.cbrt(random.random())

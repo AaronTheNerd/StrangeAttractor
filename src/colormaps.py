@@ -22,11 +22,13 @@ CUSTOM_COLORMAPS = [
 
 
 def register_custom_colormaps():
+    """Registers all colormaps defined in colomaps.py to matplotlib."""
     for cmap in CUSTOM_COLORMAPS:
         mpl.colormaps.register(cmap)
 
 
 def plot_color_gradients(cmap_list: List[mpl.colors.Colormap]):
+    """Displays all custom colormaps."""
     gradient = np.linspace(0, 1, 256)
     gradient = np.vstack((gradient, gradient))
     # Create figure and adjust figure height to number of colormaps

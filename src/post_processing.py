@@ -8,12 +8,13 @@ Copyright 2022
 import numpy
 import skimage
 
-from configs import (BILATERAL_DENOISE_CONFIGS, FILE_CONFIGS,
+from src.configs import (BILATERAL_DENOISE_CONFIGS, FILE_CONFIGS,
                      GAUSSIAN_FILTER_CONFIGS, MEDIAN_FILTER_CONFIGS,
                      TV_DENOISE_CONFIGS)
 
 
 def post_processing():
+    """Filters/Denoises the image based on the configs.yaml."""
     image = skimage.io.imread(
         fname = f'{FILE_CONFIGS["PATH"]}/{FILE_CONFIGS["ID"]}/image.png'
     )

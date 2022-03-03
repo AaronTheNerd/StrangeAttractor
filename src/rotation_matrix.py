@@ -9,10 +9,12 @@ import numpy
 
 
 def degrees_to_radians(deg: float) -> float:
+    """Converts an angle in degrees to radians."""
     return deg / 180 * numpy.pi
 
 
 def generate_rotation_matrix(alpha: float, beta: float, gamma: float) -> numpy.array:
+    """Creates a rotation matrix."""
     return numpy.array((
         (
             numpy.cos(beta) * numpy.cos(gamma),

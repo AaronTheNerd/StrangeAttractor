@@ -13,15 +13,15 @@ import numpy
 import pandas
 import yaml
 
-from attractors import get_attractor
-from colormaps import register_custom_colormaps
-from configs import (ATTRACTOR_CONFIGS, CONFIGS, FILE_CONFIGS, IMAGE_CONFIGS,
+from src.attractors import get_attractor
+from src.colormaps import register_custom_colormaps
+from src.configs import (ATTRACTOR_CONFIGS, CONFIGS, FILE_CONFIGS, IMAGE_CONFIGS,
                      PERSPECTIVE_CONFIGS, SHADER_CONFIGS, SPREAD_CONFIGS)
-from generate_points import generate_points
-from loading_bar import LoadingBar
-from particle_blur import particle_blur
-from post_processing import post_processing
-from rotation_matrix import degrees_to_radians, generate_rotation_matrix
+from src.generate_points import generate_points
+from src.loading_bar import LoadingBar
+from src.particle_blur import particle_blur
+from src.post_processing import post_processing
+from src.rotation_matrix import degrees_to_radians, generate_rotation_matrix
 
 
 def main():
