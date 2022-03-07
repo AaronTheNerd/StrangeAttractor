@@ -12,8 +12,6 @@ from typing import Tuple
 
 import numpy
 
-from src.configs import CONFIGS
-
 
 Vector = Tuple[float, float, float]
 
@@ -23,7 +21,7 @@ class Attractor(ABC):
     i.e. $$\hat{v}_{n+1} = f(\hat{v}_n)$$
     """
     @abstractmethod
-    def iterate(self, x: float, y: float, z: float) -> Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -> Vector:
         pass
 
 
@@ -31,7 +29,7 @@ class DifferentialAttractor(Attractor, ABC):
     """Represents attractors which are governed by differential functions using a fourth-order Runge Kutta method to approximate the positions of the particle. i.e.
     $$\\frac{d\hat{v}}{dt} = f(\hat{v})$$
     which is discretely approximated by 
-    $$\hat{v}_{n+1} = \\frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)$$
+    $$\hat{v}_{n+1} = \hat{v}_n + \\frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)$$
     where
     $$\hat{k}_1 = f(\hat{v}_n)$$
     $$\hat{k}_2 = f(\hat{v}_n + 0.5\Delta t\hat{k}_1)$$
@@ -42,27 +40,27 @@ class DifferentialAttractor(Attractor, ABC):
     def slope(self, x: float, y: float, z: float) -> Vector:
         pass
 
-    def iterate(self, x: float, y: float, z: float) -> Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -> Vector:
         k1, j1, i1 = self.slope(x, y, z)
         k2, j2, i2 = self.slope(
-            x + 0.5 * CONFIGS["TIME_STEP"] * k1,
-            y + 0.5 * CONFIGS["TIME_STEP"] * j1,
-            z + 0.5 * CONFIGS["TIME_STEP"] * i1
+            x + 0.5 * time_step * k1,
+            y + 0.5 * time_step * j1,
+            z + 0.5 * time_step * i1
         )
         k3, j3, i3 = self.slope(
-            x + 0.5 * CONFIGS["TIME_STEP"] * k2,
-            y + 0.5 * CONFIGS["TIME_STEP"] * j2,
-            z + 0.5 * CONFIGS["TIME_STEP"] * i2
+            x + 0.5 * time_step * k2,
+            y + 0.5 * time_step * j2,
+            z + 0.5 * time_step * i2
         )
         k4, j4, i4 = self.slope(
-            x + CONFIGS["TIME_STEP"] * k3,
-            y + CONFIGS["TIME_STEP"] * j3,
-            z + CONFIGS["TIME_STEP"] * i3
+            x + time_step * k3,
+            y + time_step * j3,
+            z + time_step * i3
         )
         return (
-            x + CONFIGS["TIME_STEP"] / 6 * (k1 + 2 * k2 + 2 * k3 + k4),
-            y + CONFIGS["TIME_STEP"] / 6 * (j1 + 2 * j2 + 2 * j3 + j4),
-            z + CONFIGS["TIME_STEP"] / 6 * (i1 + 2 * i2 + 2 * i3 + i4)
+            x + time_step / 6 * (k1 + 2 * k2 + 2 * k3 + k4),
+            y + time_step / 6 * (j1 + 2 * j2 + 2 * j3 + j4),
+            z + time_step / 6 * (i1 + 2 * i2 + 2 * i3 + i4)
         )
 
 
@@ -76,7 +74,7 @@ class Clifford(Attractor):
         self.c = c
         self.d = d
 
-    def iterate(self, x: float, y: float, z: float) -> Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -> Vector:
         return (numpy.sin(self.a * y) + self.c * numpy.cos(self.a * x),
             numpy.sin(self.b * x) + self.d * numpy.cos(self.b * y),
             0.0
@@ -93,7 +91,7 @@ class Dejong(Attractor):
         self.c = c
         self.d = d
 
-    def iterate(self, x: float, y: float, z: float) -> Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -> Vector:
         return (numpy.sin(self.a * y) - numpy.cos(self.b * x),
             numpy.sin(self.c * x) - numpy.cos(self.d * y),
             0.0
@@ -125,7 +123,7 @@ class ThomasEuler(Thomas):
     def __init__(self, b: float):
         self.b = b
     
-    def iterate(self, x: float, y: float, z: float) -> Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -> Vector:
         (dx, dy, dz) = super().slope(x, y, z)
         return (x + dx, y + dy, z + dz)
 

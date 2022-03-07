@@ -10,32 +10,54 @@ import random
 import yaml
 
 
-CONFIGS = {}
+class Configs:
+    def __init__(self, filename):
+        self.CONFIGS = {}
+        self.PARTICLE_BLUR_CONFIGS = {}
+        self.IMAGE_CONFIGS = {}
+        self.SHADER_CONFIGS = {}
+        self.SPREAD_CONFIGS = {}
+        self.FILTER_CONFIGS = {}
+        self.GAUSSIAN_FILTER_CONFIGS = {}
+        self.MEDIAN_FILTER_CONFIGS = {}
+        self.DENOISE_CONFIGS = {}
+        self.TV_DENOISE_CONFIGS = {}
+        self.BILATERAL_DENOISE_CONFIGS = {}
+        self.FILE_CONFIGS = {}
+        self.POINTS_CONFIGS = {}
+        self.PERSPECTIVE_CONFIGS = {}
+        self.ATTRACTOR_CONFIGS = {}
+        self.load_configs(filename)
 
-# Load configs
-with open('configs.yml', 'r') as file:
-    CONFIGS = yaml.safe_load(file)
 
-# Generate seed
-if CONFIGS["GENERATE_SEED"]:
-    CONFIGS["GENERATE_SEED"] = False
-    CONFIGS["SEED"] = random.randint(-2147483648, 2147483647)
+    def generate_seed(self):
+        if self.CONFIGS["GENERATE_SEED"]:
+            self.CONFIGS["GENERATE_SEED"] = False
+            self.CONFIGS["SEED"] = random.randint(-2147483648, 2147483647)
 
-# Seed RNG
-random.seed(CONFIGS["SEED"])
+        # Seed RNG
+        random.seed(self.CONFIGS["SEED"])
 
-# Create shortcuts
-PARTICLE_BLUR_CONFIGS = CONFIGS["PARTICLE_BLUR_CONFIGS"]
-IMAGE_CONFIGS = CONFIGS["IMAGE_CONFIGS"]
-SHADER_CONFIGS = CONFIGS["SHADER_CONFIGS"]
-SPREAD_CONFIGS = CONFIGS["SPREAD_CONFIGS"]
-FILTER_CONFIGS = CONFIGS["FILTER_CONFIGS"]
-GAUSSIAN_FILTER_CONFIGS = FILTER_CONFIGS["GAUSSIAN"]
-MEDIAN_FILTER_CONFIGS = FILTER_CONFIGS["MEDIAN"]
-DENOISE_CONFIGS = CONFIGS["DENOISE_CONFIGS"]
-TV_DENOISE_CONFIGS = DENOISE_CONFIGS["TV"]
-BILATERAL_DENOISE_CONFIGS = DENOISE_CONFIGS["BILATERAL"]
-FILE_CONFIGS = CONFIGS["FILE_CONFIGS"]
-POINTS_CONFIGS = CONFIGS["POINTS_CONFIGS"]
-PERSPECTIVE_CONFIGS = CONFIGS["PERSPECTIVE_CONFIGS"]
-ATTRACTOR_CONFIGS = CONFIGS["ATTRACTOR_CONFIGS"]
+
+    def load_configs(self, filename):
+        with open(filename, 'r') as file:
+            self.CONFIGS = yaml.safe_load(file)
+
+        # Generate seed
+        self.generate_seed()
+
+        # Create shortcuts
+        self.PARTICLE_BLUR_CONFIGS = self.CONFIGS["PARTICLE_BLUR_CONFIGS"]
+        self.IMAGE_CONFIGS = self.CONFIGS["IMAGE_CONFIGS"]
+        self.SHADER_CONFIGS = self.CONFIGS["SHADER_CONFIGS"]
+        self.SPREAD_CONFIGS = self.CONFIGS["SPREAD_CONFIGS"]
+        self.FILTER_CONFIGS = self.CONFIGS["FILTER_CONFIGS"]
+        self.GAUSSIAN_FILTER_CONFIGS = self.FILTER_CONFIGS["GAUSSIAN"]
+        self.MEDIAN_FILTER_CONFIGS = self.FILTER_CONFIGS["MEDIAN"]
+        self.DENOISE_CONFIGS = self.CONFIGS["DENOISE_CONFIGS"]
+        self.TV_DENOISE_CONFIGS = self.DENOISE_CONFIGS["TV"]
+        self.BILATERAL_DENOISE_CONFIGS = self.DENOISE_CONFIGS["BILATERAL"]
+        self.FILE_CONFIGS = self.CONFIGS["FILE_CONFIGS"]
+        self.POINTS_CONFIGS = self.CONFIGS["POINTS_CONFIGS"]
+        self.PERSPECTIVE_CONFIGS = self.CONFIGS["PERSPECTIVE_CONFIGS"]
+        self.ATTRACTOR_CONFIGS = self.CONFIGS["ATTRACTOR_CONFIGS"]
