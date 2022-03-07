@@ -40,53 +40,49 @@ Copyright 2022
 import numpy
 import skimage
 
-from src.configs import (BILATERAL_DENOISE_CONFIGS, FILE_CONFIGS,
-                     GAUSSIAN_FILTER_CONFIGS, MEDIAN_FILTER_CONFIGS,
-                     TV_DENOISE_CONFIGS)
 
-
-def post_processing():
+def post_processing(CONFIGS):
     &#34;&#34;&#34;Filters/Denoises the image based on the configs.yaml.&#34;&#34;&#34;
     image = skimage.io.imread(
-        fname = f&#39;{FILE_CONFIGS[&#34;PATH&#34;]}/{FILE_CONFIGS[&#34;ID&#34;]}/image.png&#39;
+        fname = f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}/image.png&#39;
     )
-    image = apply_denoise(image)
-    image = apply_filters(image)
+    image = apply_denoise(CONFIGS, image)
+    image = apply_filters(CONFIGS, image)
     skimage.io.imsave(
-        fname=f&#39;{FILE_CONFIGS[&#34;PATH&#34;]}/{FILE_CONFIGS[&#34;ID&#34;]}/image.png&#39;,
+        fname=f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}/image.png&#39;,
         arr=image
     )
 
 
-def apply_denoise(image):
-    if TV_DENOISE_CONFIGS[&#34;DENOISE&#34;]:
+def apply_denoise(CONFIGS, image):
+    if CONFIGS.TV_DENOISE_CONFIGS[&#34;DENOISE&#34;]:
         image = skimage.restoration.denoise_tv_chambolle(
             image,
-            weight = TV_DENOISE_CONFIGS[&#34;WEIGHT&#34;],
-            channel_axis = TV_DENOISE_CONFIGS[&#34;CHANNEL_AXIS&#34;]
+            weight = CONFIGS.TV_DENOISE_CONFIGS[&#34;WEIGHT&#34;],
+            channel_axis = CONFIGS.TV_DENOISE_CONFIGS[&#34;CHANNEL_AXIS&#34;]
         )
-    if BILATERAL_DENOISE_CONFIGS[&#34;DENOISE&#34;]:
+    if CONFIGS.BILATERAL_DENOISE_CONFIGS[&#34;DENOISE&#34;]:
         image = skimage.restoration.denoise_bilateral(
             image,
-            sigma_color = BILATERAL_DENOISE_CONFIGS[&#34;SIGMA_COLOR&#34;],
-            sigma_spatial = BILATERAL_DENOISE_CONFIGS[&#34;SIGMA_SPATIAL&#34;],
-            channel_axis = BILATERAL_DENOISE_CONFIGS[&#34;CHANNEL_AXIS&#34;]
+            sigma_color = CONFIGS.BILATERAL_DENOISE_CONFIGS[&#34;SIGMA_COLOR&#34;],
+            sigma_spatial = CONFIGS.BILATERAL_DENOISE_CONFIGS[&#34;SIGMA_SPATIAL&#34;],
+            channel_axis = CONFIGS.BILATERAL_DENOISE_CONFIGS[&#34;CHANNEL_AXIS&#34;]
         )
     return image
 
 
-def apply_filters(image):
-    if GAUSSIAN_FILTER_CONFIGS[&#34;FILTER&#34;]:
+def apply_filters(CONFIGS, image):
+    if CONFIGS.GAUSSIAN_FILTER_CONFIGS[&#34;FILTER&#34;]:
         image = skimage.filters.gaussian(
             image,
-            sigma=(GAUSSIAN_FILTER_CONFIGS[&#34;SIGMA_Y&#34;], GAUSSIAN_FILTER_CONFIGS[&#34;SIGMA_X&#34;]),
-            truncate=GAUSSIAN_FILTER_CONFIGS[&#34;TRUNCATE&#34;],
+            sigma=(CONFIGS.GAUSSIAN_FILTER_CONFIGS[&#34;SIGMA_Y&#34;], CONFIGS.GAUSSIAN_FILTER_CONFIGS[&#34;SIGMA_X&#34;]),
+            truncate=CONFIGS.GAUSSIAN_FILTER_CONFIGS[&#34;TRUNCATE&#34;],
             multichannel=True
         )
-    if MEDIAN_FILTER_CONFIGS[&#34;FILTER&#34;]:
+    if CONFIGS.MEDIAN_FILTER_CONFIGS[&#34;FILTER&#34;]:
         image = skimage.filters.median(
             image,
-            numpy.ones(tuple(MEDIAN_FILTER_CONFIGS[&#34;FOOTPRINT&#34;] + [3]))
+            numpy.ones(tuple(CONFIGS.MEDIAN_FILTER_CONFIGS[&#34;FOOTPRINT&#34;] + [3]))
         )
     return image</code></pre>
 </details>
@@ -99,7 +95,7 @@ def apply_filters(image):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="src.post_processing.post_processing"><code class="name flex">
-<span>def <span class="ident">post_processing</span></span>(<span>)</span>
+<span>def <span class="ident">post_processing</span></span>(<span>CONFIGS)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Filters/Denoises the image based on the configs.yaml.</p></div>
@@ -107,21 +103,21 @@ def apply_filters(image):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def post_processing():
+<pre><code class="python">def post_processing(CONFIGS):
     &#34;&#34;&#34;Filters/Denoises the image based on the configs.yaml.&#34;&#34;&#34;
     image = skimage.io.imread(
-        fname = f&#39;{FILE_CONFIGS[&#34;PATH&#34;]}/{FILE_CONFIGS[&#34;ID&#34;]}/image.png&#39;
+        fname = f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}/image.png&#39;
     )
-    image = apply_denoise(image)
-    image = apply_filters(image)
+    image = apply_denoise(CONFIGS, image)
+    image = apply_filters(CONFIGS, image)
     skimage.io.imsave(
-        fname=f&#39;{FILE_CONFIGS[&#34;PATH&#34;]}/{FILE_CONFIGS[&#34;ID&#34;]}/image.png&#39;,
+        fname=f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}/image.png&#39;,
         arr=image
     )</code></pre>
 </details>
 </dd>
 <dt id="src.post_processing.apply_denoise"><code class="name flex">
-<span>def <span class="ident">apply_denoise</span></span>(<span>image)</span>
+<span>def <span class="ident">apply_denoise</span></span>(<span>CONFIGS, image)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -129,25 +125,25 @@ def apply_filters(image):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def apply_denoise(image):
-    if TV_DENOISE_CONFIGS[&#34;DENOISE&#34;]:
+<pre><code class="python">def apply_denoise(CONFIGS, image):
+    if CONFIGS.TV_DENOISE_CONFIGS[&#34;DENOISE&#34;]:
         image = skimage.restoration.denoise_tv_chambolle(
             image,
-            weight = TV_DENOISE_CONFIGS[&#34;WEIGHT&#34;],
-            channel_axis = TV_DENOISE_CONFIGS[&#34;CHANNEL_AXIS&#34;]
+            weight = CONFIGS.TV_DENOISE_CONFIGS[&#34;WEIGHT&#34;],
+            channel_axis = CONFIGS.TV_DENOISE_CONFIGS[&#34;CHANNEL_AXIS&#34;]
         )
-    if BILATERAL_DENOISE_CONFIGS[&#34;DENOISE&#34;]:
+    if CONFIGS.BILATERAL_DENOISE_CONFIGS[&#34;DENOISE&#34;]:
         image = skimage.restoration.denoise_bilateral(
             image,
-            sigma_color = BILATERAL_DENOISE_CONFIGS[&#34;SIGMA_COLOR&#34;],
-            sigma_spatial = BILATERAL_DENOISE_CONFIGS[&#34;SIGMA_SPATIAL&#34;],
-            channel_axis = BILATERAL_DENOISE_CONFIGS[&#34;CHANNEL_AXIS&#34;]
+            sigma_color = CONFIGS.BILATERAL_DENOISE_CONFIGS[&#34;SIGMA_COLOR&#34;],
+            sigma_spatial = CONFIGS.BILATERAL_DENOISE_CONFIGS[&#34;SIGMA_SPATIAL&#34;],
+            channel_axis = CONFIGS.BILATERAL_DENOISE_CONFIGS[&#34;CHANNEL_AXIS&#34;]
         )
     return image</code></pre>
 </details>
 </dd>
 <dt id="src.post_processing.apply_filters"><code class="name flex">
-<span>def <span class="ident">apply_filters</span></span>(<span>image)</span>
+<span>def <span class="ident">apply_filters</span></span>(<span>CONFIGS, image)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -155,18 +151,18 @@ def apply_filters(image):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def apply_filters(image):
-    if GAUSSIAN_FILTER_CONFIGS[&#34;FILTER&#34;]:
+<pre><code class="python">def apply_filters(CONFIGS, image):
+    if CONFIGS.GAUSSIAN_FILTER_CONFIGS[&#34;FILTER&#34;]:
         image = skimage.filters.gaussian(
             image,
-            sigma=(GAUSSIAN_FILTER_CONFIGS[&#34;SIGMA_Y&#34;], GAUSSIAN_FILTER_CONFIGS[&#34;SIGMA_X&#34;]),
-            truncate=GAUSSIAN_FILTER_CONFIGS[&#34;TRUNCATE&#34;],
+            sigma=(CONFIGS.GAUSSIAN_FILTER_CONFIGS[&#34;SIGMA_Y&#34;], CONFIGS.GAUSSIAN_FILTER_CONFIGS[&#34;SIGMA_X&#34;]),
+            truncate=CONFIGS.GAUSSIAN_FILTER_CONFIGS[&#34;TRUNCATE&#34;],
             multichannel=True
         )
-    if MEDIAN_FILTER_CONFIGS[&#34;FILTER&#34;]:
+    if CONFIGS.MEDIAN_FILTER_CONFIGS[&#34;FILTER&#34;]:
         image = skimage.filters.median(
             image,
-            numpy.ones(tuple(MEDIAN_FILTER_CONFIGS[&#34;FOOTPRINT&#34;] + [3]))
+            numpy.ones(tuple(CONFIGS.MEDIAN_FILTER_CONFIGS[&#34;FOOTPRINT&#34;] + [3]))
         )
     return image</code></pre>
 </details>

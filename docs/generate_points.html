@@ -41,27 +41,26 @@ import random
 
 import numpy
 
-from src.configs import POINTS_CONFIGS
 
-
-def generate_points():
+def generate_points(CONFIGS):
     &#34;&#34;&#34;Generates random points uniformly within a sphere.&#34;&#34;&#34;
     points = []
-    for _ in range(POINTS_CONFIGS[&#34;NUM_OF_POINTS&#34;]):
-        r = POINTS_CONFIGS[&#34;RADIUS&#34;] * numpy.cbrt(random.random())
+    for _ in range(CONFIGS.POINTS_CONFIGS[&#34;NUM_OF_POINTS&#34;]):
+        r = CONFIGS.POINTS_CONFIGS[&#34;RADIUS&#34;] * numpy.cbrt(random.random())
         x1 = random.normalvariate(0.0, 1.0)
         x2 = random.normalvariate(0.0, 1.0)
         x3 = random.normalvariate(0.0, 1.0)
         mag = numpy.sqrt(x1 ** 2 + x2 ** 2 + x3 ** 2)
         points += [(
-            POINTS_CONFIGS[&#34;INIT_COORDS&#34;][&#34;X0&#34;] + x1 * r / mag,
-            POINTS_CONFIGS[&#34;INIT_COORDS&#34;][&#34;Y0&#34;] + x2 * r / mag,
-            POINTS_CONFIGS[&#34;INIT_COORDS&#34;][&#34;Z0&#34;] + x3 * r / mag
+            CONFIGS.POINTS_CONFIGS[&#34;INIT_COORDS&#34;][&#34;X0&#34;] + x1 * r / mag,
+            CONFIGS.POINTS_CONFIGS[&#34;INIT_COORDS&#34;][&#34;Y0&#34;] + x2 * r / mag,
+            CONFIGS.POINTS_CONFIGS[&#34;INIT_COORDS&#34;][&#34;Z0&#34;] + x3 * r / mag
         )]
     return points
 
 if __name__ == &#34;__main__&#34;:
-    print(generate_points())</code></pre>
+    from src.configs import CONFIGS
+    print(generate_points(CONFIGS))</code></pre>
 </details>
 </section>
 <section>
@@ -72,7 +71,7 @@ if __name__ == &#34;__main__&#34;:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="src.generate_points.generate_points"><code class="name flex">
-<span>def <span class="ident">generate_points</span></span>(<span>)</span>
+<span>def <span class="ident">generate_points</span></span>(<span>CONFIGS)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Generates random points uniformly within a sphere.</p></div>
@@ -80,19 +79,19 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def generate_points():
+<pre><code class="python">def generate_points(CONFIGS):
     &#34;&#34;&#34;Generates random points uniformly within a sphere.&#34;&#34;&#34;
     points = []
-    for _ in range(POINTS_CONFIGS[&#34;NUM_OF_POINTS&#34;]):
-        r = POINTS_CONFIGS[&#34;RADIUS&#34;] * numpy.cbrt(random.random())
+    for _ in range(CONFIGS.POINTS_CONFIGS[&#34;NUM_OF_POINTS&#34;]):
+        r = CONFIGS.POINTS_CONFIGS[&#34;RADIUS&#34;] * numpy.cbrt(random.random())
         x1 = random.normalvariate(0.0, 1.0)
         x2 = random.normalvariate(0.0, 1.0)
         x3 = random.normalvariate(0.0, 1.0)
         mag = numpy.sqrt(x1 ** 2 + x2 ** 2 + x3 ** 2)
         points += [(
-            POINTS_CONFIGS[&#34;INIT_COORDS&#34;][&#34;X0&#34;] + x1 * r / mag,
-            POINTS_CONFIGS[&#34;INIT_COORDS&#34;][&#34;Y0&#34;] + x2 * r / mag,
-            POINTS_CONFIGS[&#34;INIT_COORDS&#34;][&#34;Z0&#34;] + x3 * r / mag
+            CONFIGS.POINTS_CONFIGS[&#34;INIT_COORDS&#34;][&#34;X0&#34;] + x1 * r / mag,
+            CONFIGS.POINTS_CONFIGS[&#34;INIT_COORDS&#34;][&#34;Y0&#34;] + x2 * r / mag,
+            CONFIGS.POINTS_CONFIGS[&#34;INIT_COORDS&#34;][&#34;Z0&#34;] + x3 * r / mag
         )]
     return points</code></pre>
 </details>

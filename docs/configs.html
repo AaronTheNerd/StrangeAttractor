@@ -42,35 +42,57 @@ import random
 import yaml
 
 
-CONFIGS = {}
+class Configs:
+    def __init__(self, filename):
+        self.CONFIGS = {}
+        self.PARTICLE_BLUR_CONFIGS = {}
+        self.IMAGE_CONFIGS = {}
+        self.SHADER_CONFIGS = {}
+        self.SPREAD_CONFIGS = {}
+        self.FILTER_CONFIGS = {}
+        self.GAUSSIAN_FILTER_CONFIGS = {}
+        self.MEDIAN_FILTER_CONFIGS = {}
+        self.DENOISE_CONFIGS = {}
+        self.TV_DENOISE_CONFIGS = {}
+        self.BILATERAL_DENOISE_CONFIGS = {}
+        self.FILE_CONFIGS = {}
+        self.POINTS_CONFIGS = {}
+        self.PERSPECTIVE_CONFIGS = {}
+        self.ATTRACTOR_CONFIGS = {}
+        self.load_configs(filename)
 
-# Load configs
-with open(&#39;configs.yml&#39;, &#39;r&#39;) as file:
-    CONFIGS = yaml.safe_load(file)
 
-# Generate seed
-if CONFIGS[&#34;GENERATE_SEED&#34;]:
-    CONFIGS[&#34;GENERATE_SEED&#34;] = False
-    CONFIGS[&#34;SEED&#34;] = random.randint(-2147483648, 2147483647)
+    def generate_seed(self):
+        if self.CONFIGS[&#34;GENERATE_SEED&#34;]:
+            self.CONFIGS[&#34;GENERATE_SEED&#34;] = False
+            self.CONFIGS[&#34;SEED&#34;] = random.randint(-2147483648, 2147483647)
 
-# Seed RNG
-random.seed(CONFIGS[&#34;SEED&#34;])
+        # Seed RNG
+        random.seed(self.CONFIGS[&#34;SEED&#34;])
 
-# Create shortcuts
-PARTICLE_BLUR_CONFIGS = CONFIGS[&#34;PARTICLE_BLUR_CONFIGS&#34;]
-IMAGE_CONFIGS = CONFIGS[&#34;IMAGE_CONFIGS&#34;]
-SHADER_CONFIGS = CONFIGS[&#34;SHADER_CONFIGS&#34;]
-SPREAD_CONFIGS = CONFIGS[&#34;SPREAD_CONFIGS&#34;]
-FILTER_CONFIGS = CONFIGS[&#34;FILTER_CONFIGS&#34;]
-GAUSSIAN_FILTER_CONFIGS = FILTER_CONFIGS[&#34;GAUSSIAN&#34;]
-MEDIAN_FILTER_CONFIGS = FILTER_CONFIGS[&#34;MEDIAN&#34;]
-DENOISE_CONFIGS = CONFIGS[&#34;DENOISE_CONFIGS&#34;]
-TV_DENOISE_CONFIGS = DENOISE_CONFIGS[&#34;TV&#34;]
-BILATERAL_DENOISE_CONFIGS = DENOISE_CONFIGS[&#34;BILATERAL&#34;]
-FILE_CONFIGS = CONFIGS[&#34;FILE_CONFIGS&#34;]
-POINTS_CONFIGS = CONFIGS[&#34;POINTS_CONFIGS&#34;]
-PERSPECTIVE_CONFIGS = CONFIGS[&#34;PERSPECTIVE_CONFIGS&#34;]
-ATTRACTOR_CONFIGS = CONFIGS[&#34;ATTRACTOR_CONFIGS&#34;]</code></pre>
+
+    def load_configs(self, filename):
+        with open(filename, &#39;r&#39;) as file:
+            self.CONFIGS = yaml.safe_load(file)
+
+        # Generate seed
+        self.generate_seed()
+
+        # Create shortcuts
+        self.PARTICLE_BLUR_CONFIGS = self.CONFIGS[&#34;PARTICLE_BLUR_CONFIGS&#34;]
+        self.IMAGE_CONFIGS = self.CONFIGS[&#34;IMAGE_CONFIGS&#34;]
+        self.SHADER_CONFIGS = self.CONFIGS[&#34;SHADER_CONFIGS&#34;]
+        self.SPREAD_CONFIGS = self.CONFIGS[&#34;SPREAD_CONFIGS&#34;]
+        self.FILTER_CONFIGS = self.CONFIGS[&#34;FILTER_CONFIGS&#34;]
+        self.GAUSSIAN_FILTER_CONFIGS = self.FILTER_CONFIGS[&#34;GAUSSIAN&#34;]
+        self.MEDIAN_FILTER_CONFIGS = self.FILTER_CONFIGS[&#34;MEDIAN&#34;]
+        self.DENOISE_CONFIGS = self.CONFIGS[&#34;DENOISE_CONFIGS&#34;]
+        self.TV_DENOISE_CONFIGS = self.DENOISE_CONFIGS[&#34;TV&#34;]
+        self.BILATERAL_DENOISE_CONFIGS = self.DENOISE_CONFIGS[&#34;BILATERAL&#34;]
+        self.FILE_CONFIGS = self.CONFIGS[&#34;FILE_CONFIGS&#34;]
+        self.POINTS_CONFIGS = self.CONFIGS[&#34;POINTS_CONFIGS&#34;]
+        self.PERSPECTIVE_CONFIGS = self.CONFIGS[&#34;PERSPECTIVE_CONFIGS&#34;]
+        self.ATTRACTOR_CONFIGS = self.CONFIGS[&#34;ATTRACTOR_CONFIGS&#34;]</code></pre>
 </details>
 </section>
 <section>
@@ -80,6 +102,126 @@ ATTRACTOR_CONFIGS = CONFIGS[&#34;ATTRACTOR_CONFIGS&#34;]</code></pre>
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.configs.Configs"><code class="flex name class">
+<span>class <span class="ident">Configs</span></span>
+<span>(</span><span>filename)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Configs:
+    def __init__(self, filename):
+        self.CONFIGS = {}
+        self.PARTICLE_BLUR_CONFIGS = {}
+        self.IMAGE_CONFIGS = {}
+        self.SHADER_CONFIGS = {}
+        self.SPREAD_CONFIGS = {}
+        self.FILTER_CONFIGS = {}
+        self.GAUSSIAN_FILTER_CONFIGS = {}
+        self.MEDIAN_FILTER_CONFIGS = {}
+        self.DENOISE_CONFIGS = {}
+        self.TV_DENOISE_CONFIGS = {}
+        self.BILATERAL_DENOISE_CONFIGS = {}
+        self.FILE_CONFIGS = {}
+        self.POINTS_CONFIGS = {}
+        self.PERSPECTIVE_CONFIGS = {}
+        self.ATTRACTOR_CONFIGS = {}
+        self.load_configs(filename)
+
+
+    def generate_seed(self):
+        if self.CONFIGS[&#34;GENERATE_SEED&#34;]:
+            self.CONFIGS[&#34;GENERATE_SEED&#34;] = False
+            self.CONFIGS[&#34;SEED&#34;] = random.randint(-2147483648, 2147483647)
+
+        # Seed RNG
+        random.seed(self.CONFIGS[&#34;SEED&#34;])
+
+
+    def load_configs(self, filename):
+        with open(filename, &#39;r&#39;) as file:
+            self.CONFIGS = yaml.safe_load(file)
+
+        # Generate seed
+        self.generate_seed()
+
+        # Create shortcuts
+        self.PARTICLE_BLUR_CONFIGS = self.CONFIGS[&#34;PARTICLE_BLUR_CONFIGS&#34;]
+        self.IMAGE_CONFIGS = self.CONFIGS[&#34;IMAGE_CONFIGS&#34;]
+        self.SHADER_CONFIGS = self.CONFIGS[&#34;SHADER_CONFIGS&#34;]
+        self.SPREAD_CONFIGS = self.CONFIGS[&#34;SPREAD_CONFIGS&#34;]
+        self.FILTER_CONFIGS = self.CONFIGS[&#34;FILTER_CONFIGS&#34;]
+        self.GAUSSIAN_FILTER_CONFIGS = self.FILTER_CONFIGS[&#34;GAUSSIAN&#34;]
+        self.MEDIAN_FILTER_CONFIGS = self.FILTER_CONFIGS[&#34;MEDIAN&#34;]
+        self.DENOISE_CONFIGS = self.CONFIGS[&#34;DENOISE_CONFIGS&#34;]
+        self.TV_DENOISE_CONFIGS = self.DENOISE_CONFIGS[&#34;TV&#34;]
+        self.BILATERAL_DENOISE_CONFIGS = self.DENOISE_CONFIGS[&#34;BILATERAL&#34;]
+        self.FILE_CONFIGS = self.CONFIGS[&#34;FILE_CONFIGS&#34;]
+        self.POINTS_CONFIGS = self.CONFIGS[&#34;POINTS_CONFIGS&#34;]
+        self.PERSPECTIVE_CONFIGS = self.CONFIGS[&#34;PERSPECTIVE_CONFIGS&#34;]
+        self.ATTRACTOR_CONFIGS = self.CONFIGS[&#34;ATTRACTOR_CONFIGS&#34;]</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="src.configs.Configs.generate_seed"><code class="name flex">
+<span>def <span class="ident">generate_seed</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generate_seed(self):
+    if self.CONFIGS[&#34;GENERATE_SEED&#34;]:
+        self.CONFIGS[&#34;GENERATE_SEED&#34;] = False
+        self.CONFIGS[&#34;SEED&#34;] = random.randint(-2147483648, 2147483647)
+
+    # Seed RNG
+    random.seed(self.CONFIGS[&#34;SEED&#34;])</code></pre>
+</details>
+</dd>
+<dt id="src.configs.Configs.load_configs"><code class="name flex">
+<span>def <span class="ident">load_configs</span></span>(<span>self, filename)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_configs(self, filename):
+    with open(filename, &#39;r&#39;) as file:
+        self.CONFIGS = yaml.safe_load(file)
+
+    # Generate seed
+    self.generate_seed()
+
+    # Create shortcuts
+    self.PARTICLE_BLUR_CONFIGS = self.CONFIGS[&#34;PARTICLE_BLUR_CONFIGS&#34;]
+    self.IMAGE_CONFIGS = self.CONFIGS[&#34;IMAGE_CONFIGS&#34;]
+    self.SHADER_CONFIGS = self.CONFIGS[&#34;SHADER_CONFIGS&#34;]
+    self.SPREAD_CONFIGS = self.CONFIGS[&#34;SPREAD_CONFIGS&#34;]
+    self.FILTER_CONFIGS = self.CONFIGS[&#34;FILTER_CONFIGS&#34;]
+    self.GAUSSIAN_FILTER_CONFIGS = self.FILTER_CONFIGS[&#34;GAUSSIAN&#34;]
+    self.MEDIAN_FILTER_CONFIGS = self.FILTER_CONFIGS[&#34;MEDIAN&#34;]
+    self.DENOISE_CONFIGS = self.CONFIGS[&#34;DENOISE_CONFIGS&#34;]
+    self.TV_DENOISE_CONFIGS = self.DENOISE_CONFIGS[&#34;TV&#34;]
+    self.BILATERAL_DENOISE_CONFIGS = self.DENOISE_CONFIGS[&#34;BILATERAL&#34;]
+    self.FILE_CONFIGS = self.CONFIGS[&#34;FILE_CONFIGS&#34;]
+    self.POINTS_CONFIGS = self.CONFIGS[&#34;POINTS_CONFIGS&#34;]
+    self.PERSPECTIVE_CONFIGS = self.CONFIGS[&#34;PERSPECTIVE_CONFIGS&#34;]
+    self.ATTRACTOR_CONFIGS = self.CONFIGS[&#34;ATTRACTOR_CONFIGS&#34;]</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -91,6 +233,17 @@ ATTRACTOR_CONFIGS = CONFIGS[&#34;ATTRACTOR_CONFIGS&#34;]</code></pre>
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="src" href="index.html">src</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.configs.Configs" href="#src.configs.Configs">Configs</a></code></h4>
+<ul class="">
+<li><code><a title="src.configs.Configs.generate_seed" href="#src.configs.Configs.generate_seed">generate_seed</a></code></li>
+<li><code><a title="src.configs.Configs.load_configs" href="#src.configs.Configs.load_configs">load_configs</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

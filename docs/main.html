@@ -47,8 +47,7 @@ import yaml
 
 from src.attractors import get_attractor
 from src.colormaps import register_custom_colormaps
-from src.configs import (ATTRACTOR_CONFIGS, CONFIGS, FILE_CONFIGS, IMAGE_CONFIGS,
-                     PERSPECTIVE_CONFIGS, SHADER_CONFIGS, SPREAD_CONFIGS)
+from src.configs import Configs
 from src.generate_points import generate_points
 from src.loading_bar import LoadingBar
 from src.particle_blur import particle_blur
@@ -56,31 +55,32 @@ from src.post_processing import post_processing
 from src.rotation_matrix import degrees_to_radians, generate_rotation_matrix
 
 
-def main():
+def main(CONFIGS):
     img_map = functools.partial(
         datashader.utils.export_image,
-        export_path = f&#39;{FILE_CONFIGS[&#34;PATH&#34;]}/{FILE_CONFIGS[&#34;ID&#34;]}&#39;,
-        background = IMAGE_CONFIGS[&#34;BACKGROUND_COLOR&#34;]
+        export_path = f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}&#39;,
+        background = CONFIGS.IMAGE_CONFIGS[&#34;BACKGROUND_COLOR&#34;]
     )
-    attractor = get_attractor(ATTRACTOR_CONFIGS[&#34;NAME&#34;])(*ATTRACTOR_CONFIGS[&#34;ARGS&#34;])
-    loading_bar = LoadingBar(CONFIGS[&#34;ITERATIONS&#34;] - 1, width=40)
-    print(&#34;Loading custom colormaps&#34;)
-    register_custom_colormaps()
+    attractor = get_attractor(CONFIGS.ATTRACTOR_CONFIGS[&#34;NAME&#34;])(*CONFIGS.ATTRACTOR_CONFIGS[&#34;ARGS&#34;])
+    loading_bar = LoadingBar(CONFIGS.CONFIGS[&#34;ITERATIONS&#34;] - 1, width=40)
+    if CONFIGS.CONFIGS[&#34;CUSTOM_COLORMAPS&#34;]:
+        print(&#34;Loading custom colormaps&#34;)
+        register_custom_colormaps()
     print(&#34;Generating initial points&#34;)
-    particles = generate_points()
+    particles = generate_points(CONFIGS)
     print(&#34;Generating rotation matrix&#34;)
-    alpha = degrees_to_radians(PERSPECTIVE_CONFIGS[&#34;X_ROTATION_DEG&#34;])
-    beta = degrees_to_radians(PERSPECTIVE_CONFIGS[&#34;Y_ROTATION_DEG&#34;])
-    gamma = degrees_to_radians(PERSPECTIVE_CONFIGS[&#34;Z_ROTATION_DEG&#34;])
+    alpha = degrees_to_radians(CONFIGS.PERSPECTIVE_CONFIGS[&#34;X_ROTATION_DEG&#34;])
+    beta = degrees_to_radians(CONFIGS.PERSPECTIVE_CONFIGS[&#34;Y_ROTATION_DEG&#34;])
+    gamma = degrees_to_radians(CONFIGS.PERSPECTIVE_CONFIGS[&#34;Z_ROTATION_DEG&#34;])
     matrix = generate_rotation_matrix(alpha, beta, gamma)
     print(&#34;Iterating points&#34;)
     d = {&#39;x&#39;: [], &#39;y&#39;: [], &#39;weight&#39;: []}
-    for i in range(CONFIGS[&#34;ITERATIONS&#34;]):
+    for i in range(CONFIGS.CONFIGS[&#34;ITERATIONS&#34;]):
         for index, (x, y, z) in enumerate(particles):
-            x, y, z = attractor.iterate(x, y, z)
+            x, y, z = attractor.iterate(CONFIGS.CONFIGS[&#34;TIME_STEP&#34;], x, y, z)
             particles[index] = (x, y, z)
             (x, y, _) = tuple(matrix.dot(numpy.array( (x, y, z) )))
-            d_append = particle_blur(x, y)
+            d_append = particle_blur(CONFIGS, x, y)
             d[&#39;x&#39;] += d_append[&#39;x&#39;]
             d[&#39;y&#39;] += d_append[&#39;y&#39;]
             d[&#39;weight&#39;] += d_append[&#39;weight&#39;]
@@ -92,8 +92,8 @@ def main():
     x_range = (min(d[&#39;x&#39;]), max(d[&#39;x&#39;]))
     y_range = (min(d[&#39;y&#39;]), max(d[&#39;y&#39;]))
     cvs1 = datashader.Canvas(
-        plot_width = IMAGE_CONFIGS[&#34;WIDTH&#34;],
-        plot_height = IMAGE_CONFIGS[&#34;HEIGHT&#34;],
+        plot_width = CONFIGS.IMAGE_CONFIGS[&#34;WIDTH&#34;],
+        plot_height = CONFIGS.IMAGE_CONFIGS[&#34;HEIGHT&#34;],
         x_range = x_range,
         y_range = y_range
     )
@@ -102,30 +102,30 @@ def main():
     print(&#34;Shading datashader&#34;)
     img = datashader.transfer_functions.shade(
         agg1,
-        cmap = matplotlib.colormaps[SHADER_CONFIGS[&#34;COLOR_MAP&#34;]],
-        span = None if SHADER_CONFIGS[&#34;HOW&#34;] == &#34;eq_hist&#34; else SHADER_CONFIGS[&#34;SPAN&#34;],
-        how = SHADER_CONFIGS[&#34;HOW&#34;]
+        cmap = matplotlib.colormaps[CONFIGS.SHADER_CONFIGS[&#34;COLOR_MAP&#34;]],
+        span = None if CONFIGS.SHADER_CONFIGS[&#34;HOW&#34;] == &#34;eq_hist&#34; else CONFIGS.SHADER_CONFIGS[&#34;SPAN&#34;],
+        how = CONFIGS.SHADER_CONFIGS[&#34;HOW&#34;]
     )
     print(&#34;Spreading pixels&#34;)
     img = datashader.transfer_functions.dynspread(
         img,
-        threshold = SPREAD_CONFIGS[&#34;THRESHOLD&#34;],
-        max_px = SPREAD_CONFIGS[&#34;MAX_PX&#34;],
-        shape = SPREAD_CONFIGS[&#34;SHAPE&#34;],
-        how = SPREAD_CONFIGS[&#34;HOW&#34;]
+        threshold = CONFIGS.SPREAD_CONFIGS[&#34;THRESHOLD&#34;],
+        max_px = CONFIGS.SPREAD_CONFIGS[&#34;MAX_PX&#34;],
+        shape = CONFIGS.SPREAD_CONFIGS[&#34;SHAPE&#34;],
+        how = CONFIGS.SPREAD_CONFIGS[&#34;HOW&#34;]
     )
     print(&#34;Exporting Image&#34;)
-    img_map(img, &#34;image&#34;)
+    img_map(img, CONFIGS.IMAGE_CONFIGS[&#34;NAME&#34;])
     print(&#34;Dumping configs&#34;)
-    with open(f&#39;{FILE_CONFIGS[&#34;PATH&#34;]}/{FILE_CONFIGS[&#34;ID&#34;]}/configs.yml&#39;, &#39;w+&#39;) as output_configs:
-        yaml.dump(CONFIGS, output_configs, sort_keys = False)
+    with open(f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}/configs.yml&#39;, &#39;w+&#39;) as output_configs:
+        yaml.dump(CONFIGS.CONFIGS, output_configs, sort_keys = False)
     print(&#34;Post processing&#34;)
-    post_processing()
+    post_processing(CONFIGS)
     print(&#34;COMPLETE&#34;)
 
 
 if __name__ == &#34;__main__&#34;:
-    main()</code></pre>
+    main(Configs(&#39;configs.yml&#39;))</code></pre>
 </details>
 </section>
 <section>
@@ -136,7 +136,7 @@ if __name__ == &#34;__main__&#34;:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="src.main.main"><code class="name flex">
-<span>def <span class="ident">main</span></span>(<span>)</span>
+<span>def <span class="ident">main</span></span>(<span>CONFIGS)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -144,31 +144,32 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def main():
+<pre><code class="python">def main(CONFIGS):
     img_map = functools.partial(
         datashader.utils.export_image,
-        export_path = f&#39;{FILE_CONFIGS[&#34;PATH&#34;]}/{FILE_CONFIGS[&#34;ID&#34;]}&#39;,
-        background = IMAGE_CONFIGS[&#34;BACKGROUND_COLOR&#34;]
+        export_path = f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}&#39;,
+        background = CONFIGS.IMAGE_CONFIGS[&#34;BACKGROUND_COLOR&#34;]
     )
-    attractor = get_attractor(ATTRACTOR_CONFIGS[&#34;NAME&#34;])(*ATTRACTOR_CONFIGS[&#34;ARGS&#34;])
-    loading_bar = LoadingBar(CONFIGS[&#34;ITERATIONS&#34;] - 1, width=40)
-    print(&#34;Loading custom colormaps&#34;)
-    register_custom_colormaps()
+    attractor = get_attractor(CONFIGS.ATTRACTOR_CONFIGS[&#34;NAME&#34;])(*CONFIGS.ATTRACTOR_CONFIGS[&#34;ARGS&#34;])
+    loading_bar = LoadingBar(CONFIGS.CONFIGS[&#34;ITERATIONS&#34;] - 1, width=40)
+    if CONFIGS.CONFIGS[&#34;CUSTOM_COLORMAPS&#34;]:
+        print(&#34;Loading custom colormaps&#34;)
+        register_custom_colormaps()
     print(&#34;Generating initial points&#34;)
-    particles = generate_points()
+    particles = generate_points(CONFIGS)
     print(&#34;Generating rotation matrix&#34;)
-    alpha = degrees_to_radians(PERSPECTIVE_CONFIGS[&#34;X_ROTATION_DEG&#34;])
-    beta = degrees_to_radians(PERSPECTIVE_CONFIGS[&#34;Y_ROTATION_DEG&#34;])
-    gamma = degrees_to_radians(PERSPECTIVE_CONFIGS[&#34;Z_ROTATION_DEG&#34;])
+    alpha = degrees_to_radians(CONFIGS.PERSPECTIVE_CONFIGS[&#34;X_ROTATION_DEG&#34;])
+    beta = degrees_to_radians(CONFIGS.PERSPECTIVE_CONFIGS[&#34;Y_ROTATION_DEG&#34;])
+    gamma = degrees_to_radians(CONFIGS.PERSPECTIVE_CONFIGS[&#34;Z_ROTATION_DEG&#34;])
     matrix = generate_rotation_matrix(alpha, beta, gamma)
     print(&#34;Iterating points&#34;)
     d = {&#39;x&#39;: [], &#39;y&#39;: [], &#39;weight&#39;: []}
-    for i in range(CONFIGS[&#34;ITERATIONS&#34;]):
+    for i in range(CONFIGS.CONFIGS[&#34;ITERATIONS&#34;]):
         for index, (x, y, z) in enumerate(particles):
-            x, y, z = attractor.iterate(x, y, z)
+            x, y, z = attractor.iterate(CONFIGS.CONFIGS[&#34;TIME_STEP&#34;], x, y, z)
             particles[index] = (x, y, z)
             (x, y, _) = tuple(matrix.dot(numpy.array( (x, y, z) )))
-            d_append = particle_blur(x, y)
+            d_append = particle_blur(CONFIGS, x, y)
             d[&#39;x&#39;] += d_append[&#39;x&#39;]
             d[&#39;y&#39;] += d_append[&#39;y&#39;]
             d[&#39;weight&#39;] += d_append[&#39;weight&#39;]
@@ -180,8 +181,8 @@ if __name__ == &#34;__main__&#34;:
     x_range = (min(d[&#39;x&#39;]), max(d[&#39;x&#39;]))
     y_range = (min(d[&#39;y&#39;]), max(d[&#39;y&#39;]))
     cvs1 = datashader.Canvas(
-        plot_width = IMAGE_CONFIGS[&#34;WIDTH&#34;],
-        plot_height = IMAGE_CONFIGS[&#34;HEIGHT&#34;],
+        plot_width = CONFIGS.IMAGE_CONFIGS[&#34;WIDTH&#34;],
+        plot_height = CONFIGS.IMAGE_CONFIGS[&#34;HEIGHT&#34;],
         x_range = x_range,
         y_range = y_range
     )
@@ -190,25 +191,25 @@ if __name__ == &#34;__main__&#34;:
     print(&#34;Shading datashader&#34;)
     img = datashader.transfer_functions.shade(
         agg1,
-        cmap = matplotlib.colormaps[SHADER_CONFIGS[&#34;COLOR_MAP&#34;]],
-        span = None if SHADER_CONFIGS[&#34;HOW&#34;] == &#34;eq_hist&#34; else SHADER_CONFIGS[&#34;SPAN&#34;],
-        how = SHADER_CONFIGS[&#34;HOW&#34;]
+        cmap = matplotlib.colormaps[CONFIGS.SHADER_CONFIGS[&#34;COLOR_MAP&#34;]],
+        span = None if CONFIGS.SHADER_CONFIGS[&#34;HOW&#34;] == &#34;eq_hist&#34; else CONFIGS.SHADER_CONFIGS[&#34;SPAN&#34;],
+        how = CONFIGS.SHADER_CONFIGS[&#34;HOW&#34;]
     )
     print(&#34;Spreading pixels&#34;)
     img = datashader.transfer_functions.dynspread(
         img,
-        threshold = SPREAD_CONFIGS[&#34;THRESHOLD&#34;],
-        max_px = SPREAD_CONFIGS[&#34;MAX_PX&#34;],
-        shape = SPREAD_CONFIGS[&#34;SHAPE&#34;],
-        how = SPREAD_CONFIGS[&#34;HOW&#34;]
+        threshold = CONFIGS.SPREAD_CONFIGS[&#34;THRESHOLD&#34;],
+        max_px = CONFIGS.SPREAD_CONFIGS[&#34;MAX_PX&#34;],
+        shape = CONFIGS.SPREAD_CONFIGS[&#34;SHAPE&#34;],
+        how = CONFIGS.SPREAD_CONFIGS[&#34;HOW&#34;]
     )
     print(&#34;Exporting Image&#34;)
-    img_map(img, &#34;image&#34;)
+    img_map(img, CONFIGS.IMAGE_CONFIGS[&#34;NAME&#34;])
     print(&#34;Dumping configs&#34;)
-    with open(f&#39;{FILE_CONFIGS[&#34;PATH&#34;]}/{FILE_CONFIGS[&#34;ID&#34;]}/configs.yml&#39;, &#39;w+&#39;) as output_configs:
-        yaml.dump(CONFIGS, output_configs, sort_keys = False)
+    with open(f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}/configs.yml&#39;, &#39;w+&#39;) as output_configs:
+        yaml.dump(CONFIGS.CONFIGS, output_configs, sort_keys = False)
     print(&#34;Post processing&#34;)
-    post_processing()
+    post_processing(CONFIGS)
     print(&#34;COMPLETE&#34;)</code></pre>
 </details>
 </dd>

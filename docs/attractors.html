@@ -44,8 +44,6 @@ from typing import Tuple
 
 import numpy
 
-from src.configs import CONFIGS
-
 
 Vector = Tuple[float, float, float]
 
@@ -55,7 +53,7 @@ class Attractor(ABC):
     i.e. $$\hat{v}_{n+1} = f(\hat{v}_n)$$
     &#34;&#34;&#34;
     @abstractmethod
-    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
         pass
 
 
@@ -63,7 +61,7 @@ class DifferentialAttractor(Attractor, ABC):
     &#34;&#34;&#34;Represents attractors which are governed by differential functions using a fourth-order Runge Kutta method to approximate the positions of the particle. i.e.
     $$\\frac{d\hat{v}}{dt} = f(\hat{v})$$
     which is discretely approximated by 
-    $$\hat{v}_{n+1} = \\frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)$$
+    $$\hat{v}_{n+1} = \hat{v}_n + \\frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)$$
     where
     $$\hat{k}_1 = f(\hat{v}_n)$$
     $$\hat{k}_2 = f(\hat{v}_n + 0.5\Delta t\hat{k}_1)$$
@@ -74,27 +72,27 @@ class DifferentialAttractor(Attractor, ABC):
     def slope(self, x: float, y: float, z: float) -&gt; Vector:
         pass
 
-    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
         k1, j1, i1 = self.slope(x, y, z)
         k2, j2, i2 = self.slope(
-            x + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * k1,
-            y + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * j1,
-            z + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * i1
+            x + 0.5 * time_step * k1,
+            y + 0.5 * time_step * j1,
+            z + 0.5 * time_step * i1
         )
         k3, j3, i3 = self.slope(
-            x + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * k2,
-            y + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * j2,
-            z + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * i2
+            x + 0.5 * time_step * k2,
+            y + 0.5 * time_step * j2,
+            z + 0.5 * time_step * i2
         )
         k4, j4, i4 = self.slope(
-            x + CONFIGS[&#34;TIME_STEP&#34;] * k3,
-            y + CONFIGS[&#34;TIME_STEP&#34;] * j3,
-            z + CONFIGS[&#34;TIME_STEP&#34;] * i3
+            x + time_step * k3,
+            y + time_step * j3,
+            z + time_step * i3
         )
         return (
-            x + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (k1 + 2 * k2 + 2 * k3 + k4),
-            y + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (j1 + 2 * j2 + 2 * j3 + j4),
-            z + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (i1 + 2 * i2 + 2 * i3 + i4)
+            x + time_step / 6 * (k1 + 2 * k2 + 2 * k3 + k4),
+            y + time_step / 6 * (j1 + 2 * j2 + 2 * j3 + j4),
+            z + time_step / 6 * (i1 + 2 * i2 + 2 * i3 + i4)
         )
 
 
@@ -108,7 +106,7 @@ class Clifford(Attractor):
         self.c = c
         self.d = d
 
-    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
         return (numpy.sin(self.a * y) + self.c * numpy.cos(self.a * x),
             numpy.sin(self.b * x) + self.d * numpy.cos(self.b * y),
             0.0
@@ -125,7 +123,7 @@ class Dejong(Attractor):
         self.c = c
         self.d = d
 
-    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
         return (numpy.sin(self.a * y) - numpy.cos(self.b * x),
             numpy.sin(self.c * x) - numpy.cos(self.d * y),
             0.0
@@ -157,7 +155,7 @@ class ThomasEuler(Thomas):
     def __init__(self, b: float):
         self.b = b
     
-    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
         (dx, dy, dz) = super().slope(x, y, z)
         return (x + dx, y + dy, z + dz)
 
@@ -414,7 +412,7 @@ i.e. <span><span class="MathJax_Preview">\hat{v}_{n+1} = f(\hat{v}_n)</span><scr
     i.e. $$\hat{v}_{n+1} = f(\hat{v}_n)$$
     &#34;&#34;&#34;
     @abstractmethod
-    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
         pass</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -430,7 +428,7 @@ i.e. <span><span class="MathJax_Preview">\hat{v}_{n+1} = f(\hat{v}_n)</span><scr
 <h3>Methods</h3>
 <dl>
 <dt id="src.attractors.Attractor.iterate"><code class="name flex">
-<span>def <span class="ident">iterate</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+<span>def <span class="ident">iterate</span></span>(<span>self, time_step: float, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -439,7 +437,7 @@ i.e. <span><span class="MathJax_Preview">\hat{v}_{n+1} = f(\hat{v}_n)</span><scr
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@abstractmethod
-def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
     pass</code></pre>
 </details>
 </dd>
@@ -452,7 +450,7 @@ def iterate(self, x: float, y: float, z: float) -&gt; Vector:
 <div class="desc"><p>Represents attractors which are governed by differential functions using a fourth-order Runge Kutta method to approximate the positions of the particle. i.e.
 <span><span class="MathJax_Preview">\frac{d\hat{v}}{dt} = f(\hat{v})</span><script type="math/tex; mode=display">\frac{d\hat{v}}{dt} = f(\hat{v})</script></span>
 which is discretely approximated by
-<span><span class="MathJax_Preview">\hat{v}_{n+1} = \frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)</span><script type="math/tex; mode=display">\hat{v}_{n+1} = \frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)</script></span>
+<span><span class="MathJax_Preview">\hat{v}_{n+1} = \hat{v}_n + \frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)</span><script type="math/tex; mode=display">\hat{v}_{n+1} = \hat{v}_n + \frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)</script></span>
 where
 <span><span class="MathJax_Preview">\hat{k}_1 = f(\hat{v}_n)</span><script type="math/tex; mode=display">\hat{k}_1 = f(\hat{v}_n)</script></span>
 <span><span class="MathJax_Preview">\hat{k}_2 = f(\hat{v}_n + 0.5\Delta t\hat{k}_1)</span><script type="math/tex; mode=display">\hat{k}_2 = f(\hat{v}_n + 0.5\Delta t\hat{k}_1)</script></span>
@@ -466,7 +464,7 @@ where
     &#34;&#34;&#34;Represents attractors which are governed by differential functions using a fourth-order Runge Kutta method to approximate the positions of the particle. i.e.
     $$\\frac{d\hat{v}}{dt} = f(\hat{v})$$
     which is discretely approximated by 
-    $$\hat{v}_{n+1} = \\frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)$$
+    $$\hat{v}_{n+1} = \hat{v}_n + \\frac{\Delta t}{6}(\hat{k}_1+2\hat{k}_2+2\hat{k}_3+\hat{k}_4)$$
     where
     $$\hat{k}_1 = f(\hat{v}_n)$$
     $$\hat{k}_2 = f(\hat{v}_n + 0.5\Delta t\hat{k}_1)$$
@@ -477,27 +475,27 @@ where
     def slope(self, x: float, y: float, z: float) -&gt; Vector:
         pass
 
-    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
         k1, j1, i1 = self.slope(x, y, z)
         k2, j2, i2 = self.slope(
-            x + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * k1,
-            y + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * j1,
-            z + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * i1
+            x + 0.5 * time_step * k1,
+            y + 0.5 * time_step * j1,
+            z + 0.5 * time_step * i1
         )
         k3, j3, i3 = self.slope(
-            x + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * k2,
-            y + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * j2,
-            z + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * i2
+            x + 0.5 * time_step * k2,
+            y + 0.5 * time_step * j2,
+            z + 0.5 * time_step * i2
         )
         k4, j4, i4 = self.slope(
-            x + CONFIGS[&#34;TIME_STEP&#34;] * k3,
-            y + CONFIGS[&#34;TIME_STEP&#34;] * j3,
-            z + CONFIGS[&#34;TIME_STEP&#34;] * i3
+            x + time_step * k3,
+            y + time_step * j3,
+            z + time_step * i3
         )
         return (
-            x + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (k1 + 2 * k2 + 2 * k3 + k4),
-            y + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (j1 + 2 * j2 + 2 * j3 + j4),
-            z + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (i1 + 2 * i2 + 2 * i3 + i4)
+            x + time_step / 6 * (k1 + 2 * k2 + 2 * k3 + k4),
+            y + time_step / 6 * (j1 + 2 * j2 + 2 * j3 + j4),
+            z + time_step / 6 * (i1 + 2 * i2 + 2 * i3 + i4)
         )</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -537,7 +535,7 @@ def slope(self, x: float, y: float, z: float) -&gt; Vector:
 </details>
 </dd>
 <dt id="src.attractors.DifferentialAttractor.iterate"><code class="name flex">
-<span>def <span class="ident">iterate</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+<span>def <span class="ident">iterate</span></span>(<span>self, time_step: float, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -545,27 +543,27 @@ def slope(self, x: float, y: float, z: float) -&gt; Vector:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+<pre><code class="python">def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
     k1, j1, i1 = self.slope(x, y, z)
     k2, j2, i2 = self.slope(
-        x + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * k1,
-        y + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * j1,
-        z + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * i1
+        x + 0.5 * time_step * k1,
+        y + 0.5 * time_step * j1,
+        z + 0.5 * time_step * i1
     )
     k3, j3, i3 = self.slope(
-        x + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * k2,
-        y + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * j2,
-        z + 0.5 * CONFIGS[&#34;TIME_STEP&#34;] * i2
+        x + 0.5 * time_step * k2,
+        y + 0.5 * time_step * j2,
+        z + 0.5 * time_step * i2
     )
     k4, j4, i4 = self.slope(
-        x + CONFIGS[&#34;TIME_STEP&#34;] * k3,
-        y + CONFIGS[&#34;TIME_STEP&#34;] * j3,
-        z + CONFIGS[&#34;TIME_STEP&#34;] * i3
+        x + time_step * k3,
+        y + time_step * j3,
+        z + time_step * i3
     )
     return (
-        x + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (k1 + 2 * k2 + 2 * k3 + k4),
-        y + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (j1 + 2 * j2 + 2 * j3 + j4),
-        z + CONFIGS[&#34;TIME_STEP&#34;] / 6 * (i1 + 2 * i2 + 2 * i3 + i4)
+        x + time_step / 6 * (k1 + 2 * k2 + 2 * k3 + k4),
+        y + time_step / 6 * (j1 + 2 * j2 + 2 * j3 + j4),
+        z + time_step / 6 * (i1 + 2 * i2 + 2 * i3 + i4)
     )</code></pre>
 </details>
 </dd>
@@ -592,7 +590,7 @@ def slope(self, x: float, y: float, z: float) -&gt; Vector:
         self.c = c
         self.d = d
 
-    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
         return (numpy.sin(self.a * y) + self.c * numpy.cos(self.a * x),
             numpy.sin(self.b * x) + self.d * numpy.cos(self.b * y),
             0.0
@@ -606,7 +604,7 @@ def slope(self, x: float, y: float, z: float) -&gt; Vector:
 <h3>Methods</h3>
 <dl>
 <dt id="src.attractors.Clifford.iterate"><code class="name flex">
-<span>def <span class="ident">iterate</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+<span>def <span class="ident">iterate</span></span>(<span>self, time_step: float, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -614,7 +612,7 @@ def slope(self, x: float, y: float, z: float) -&gt; Vector:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+<pre><code class="python">def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
     return (numpy.sin(self.a * y) + self.c * numpy.cos(self.a * x),
         numpy.sin(self.b * x) + self.d * numpy.cos(self.b * y),
         0.0
@@ -644,7 +642,7 @@ def slope(self, x: float, y: float, z: float) -&gt; Vector:
         self.c = c
         self.d = d
 
-    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
         return (numpy.sin(self.a * y) - numpy.cos(self.b * x),
             numpy.sin(self.c * x) - numpy.cos(self.d * y),
             0.0
@@ -658,7 +656,7 @@ def slope(self, x: float, y: float, z: float) -&gt; Vector:
 <h3>Methods</h3>
 <dl>
 <dt id="src.attractors.Dejong.iterate"><code class="name flex">
-<span>def <span class="ident">iterate</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+<span>def <span class="ident">iterate</span></span>(<span>self, time_step: float, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -666,7 +664,7 @@ def slope(self, x: float, y: float, z: float) -&gt; Vector:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+<pre><code class="python">def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
     return (numpy.sin(self.a * y) - numpy.cos(self.b * x),
         numpy.sin(self.c * x) - numpy.cos(self.d * y),
         0.0
@@ -755,7 +753,7 @@ def slope(self, x: float, y: float, z: float) -&gt; Vector:
     def __init__(self, b: float):
         self.b = b
     
-    def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+    def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
         (dx, dy, dz) = super().slope(x, y, z)
         return (x + dx, y + dy, z + dz)</code></pre>
 </details>
@@ -769,7 +767,7 @@ def slope(self, x: float, y: float, z: float) -&gt; Vector:
 <h3>Methods</h3>
 <dl>
 <dt id="src.attractors.ThomasEuler.iterate"><code class="name flex">
-<span>def <span class="ident">iterate</span></span>(<span>self, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
+<span>def <span class="ident">iterate</span></span>(<span>self, time_step: float, x: float, y: float, z: float) ‑> Tuple[float, float, float]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -777,7 +775,7 @@ def slope(self, x: float, y: float, z: float) -&gt; Vector:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def iterate(self, x: float, y: float, z: float) -&gt; Vector:
+<pre><code class="python">def iterate(self, time_step: float, x: float, y: float, z: float) -&gt; Vector:
     (dx, dy, dz) = super().slope(x, y, z)
     return (x + dx, y + dy, z + dz)</code></pre>
 </details>
