@@ -6,18 +6,18 @@ PYTHON = $(PIPENV) run python
 PDOC = pdoc
 PDOC_FLAGS = --force --config latex_math=True --config sort_identifiers=False --output-dir docs --html
 
-SRC_FILES = $(wildcard src/*.py)
-DOC_FILES = $(subst py,html,$(subst src,html,$(SRC_FILES)))
+.PHONY: run preview_cmaps test install docs clean
 
-.PHONY: run preview_cmaps install docs clean
-
-all: run docs
+all: run
 
 run:
 	$(PYTHON) -m src.main
 	
 preview_cmaps: 
 	$(PYTHON) -m src.colormaps
+
+test:
+	$(PYTHON) -m src.test.main
 
 install:
 	$(PIPENV) install
