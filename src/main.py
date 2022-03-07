@@ -68,9 +68,12 @@ def main(CONFIGS):
     print("Aggregating points")
     agg1 = cvs1.points(df1, 'x', 'y', datashader.sum('weight'))
     print("Shading datashader")
+    cmap = matplotlib.colormaps[CONFIGS.SHADER_CONFIGS["COLOR_MAP"]]
+    if CONFIGS.SHADER_CONFIGS["REVERSED"]:
+        cmap = cmap.reversed()
     img = datashader.transfer_functions.shade(
         agg1,
-        cmap = matplotlib.colormaps[CONFIGS.SHADER_CONFIGS["COLOR_MAP"]],
+        cmap = cmap,
         span = None if CONFIGS.SHADER_CONFIGS["HOW"] == "eq_hist" else CONFIGS.SHADER_CONFIGS["SPAN"],
         how = CONFIGS.SHADER_CONFIGS["HOW"]
     )
