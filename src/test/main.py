@@ -26,7 +26,6 @@ if __name__ == "__main__":
                 0, 
                 int(round((upper - lower) / step))
             ) * step + lower
-
         print(f"Arguments: {CONFIGS.ATTRACTOR_CONFIGS['ARGS']}")
         main(CONFIGS)
         CONFIGS.CONFIGS["CUSTOM_COLORMAPS"] = False
