@@ -5,8 +5,6 @@ Copyright 2022
 """
 
 
-import functools
-
 import datashader
 import matplotlib
 import numpy
@@ -21,14 +19,11 @@ from src.loading_bar import LoadingBar
 from src.particle_blur import particle_blur
 from src.post_processing import post_processing
 from src.rotation_matrix import degrees_to_radians, generate_rotation_matrix
+from src.staging import stage
+from src.starscape import combine_starscape, generate_starscape
 
 
-def main(CONFIGS):
-    img_map = functools.partial(
-        datashader.utils.export_image,
-        export_path = f'{CONFIGS.FILE_CONFIGS["PATH"]}/{CONFIGS.FILE_CONFIGS["ID"]}',
-        background = CONFIGS.IMAGE_CONFIGS["BACKGROUND_COLOR"]
-    )
+def main(CONFIGS: Configs):
     attractor = get_attractor(CONFIGS.ATTRACTOR_CONFIGS["NAME"])(*CONFIGS.ATTRACTOR_CONFIGS["ARGS"])
     loading_bar = LoadingBar(CONFIGS.CONFIGS["ITERATIONS"] - 1, width=40)
     if CONFIGS.CONFIGS["CUSTOM_COLORMAPS"]:
@@ -56,9 +51,15 @@ def main(CONFIGS):
     print("\nFinished iterating points")
     print("Converting point history to dataframe")
     df1 = pandas.DataFrame(d)
-    print("Converting dataframe to datashader")
+    print("Calculating value ranges")
     x_range = (min(d['x']), max(d['x']))
     y_range = (min(d['y']), max(d['y']))
+    print(f"Original x-range: {x_range}")
+    print(f"Original y-range: {y_range}")
+    x_range, y_range = stage(CONFIGS, x_range, y_range)
+    print(f"Final x-range: {x_range}")
+    print(f"Final y-range: {y_range}")
+    print("Converting dataframe to datashader")
     cvs1 = datashader.Canvas(
         plot_width = CONFIGS.IMAGE_CONFIGS["WIDTH"],
         plot_height = CONFIGS.IMAGE_CONFIGS["HEIGHT"],
@@ -85,13 +86,22 @@ def main(CONFIGS):
         shape = CONFIGS.SPREAD_CONFIGS["SHAPE"],
         how = CONFIGS.SPREAD_CONFIGS["HOW"]
     )
+    print("Setting up StarScape")
+    generate_starscape(CONFIGS, x_range, y_range)
     print("Exporting Image")
-    img_map(img, CONFIGS.IMAGE_CONFIGS["NAME"])
+    datashader.utils.export_image(
+        img,
+        CONFIGS.IMAGE_CONFIGS["NAME"],
+        export_path = f'{CONFIGS.FILE_CONFIGS["PATH"]}/{CONFIGS.FILE_CONFIGS["ID"]}',
+        background = CONFIGS.IMAGE_CONFIGS["BACKGROUND_COLOR"]
+    )
     print("Dumping configs")
     with open(f'{CONFIGS.FILE_CONFIGS["PATH"]}/{CONFIGS.FILE_CONFIGS["ID"]}/configs.yml', 'w+') as output_configs:
         yaml.dump(CONFIGS.CONFIGS, output_configs, sort_keys = False)
     print("Post processing")
     post_processing(CONFIGS)
+    print("Combining starscape and attractor")
+    combine_starscape(CONFIGS)
     print("COMPLETE")
 
 
