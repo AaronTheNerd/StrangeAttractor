@@ -37,8 +37,6 @@ Copyright 2022
 &#34;&#34;&#34;
 
 
-import functools
-
 import datashader
 import matplotlib
 import numpy
@@ -53,14 +51,11 @@ from src.loading_bar import LoadingBar
 from src.particle_blur import particle_blur
 from src.post_processing import post_processing
 from src.rotation_matrix import degrees_to_radians, generate_rotation_matrix
+from src.staging import stage
+from src.starscape import combine_starscape, generate_starscape
 
 
-def main(CONFIGS):
-    img_map = functools.partial(
-        datashader.utils.export_image,
-        export_path = f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}&#39;,
-        background = CONFIGS.IMAGE_CONFIGS[&#34;BACKGROUND_COLOR&#34;]
-    )
+def main(CONFIGS: Configs):
     attractor = get_attractor(CONFIGS.ATTRACTOR_CONFIGS[&#34;NAME&#34;])(*CONFIGS.ATTRACTOR_CONFIGS[&#34;ARGS&#34;])
     loading_bar = LoadingBar(CONFIGS.CONFIGS[&#34;ITERATIONS&#34;] - 1, width=40)
     if CONFIGS.CONFIGS[&#34;CUSTOM_COLORMAPS&#34;]:
@@ -88,9 +83,15 @@ def main(CONFIGS):
     print(&#34;\nFinished iterating points&#34;)
     print(&#34;Converting point history to dataframe&#34;)
     df1 = pandas.DataFrame(d)
-    print(&#34;Converting dataframe to datashader&#34;)
+    print(&#34;Calculating value ranges&#34;)
     x_range = (min(d[&#39;x&#39;]), max(d[&#39;x&#39;]))
     y_range = (min(d[&#39;y&#39;]), max(d[&#39;y&#39;]))
+    print(f&#34;Original x-range: {x_range}&#34;)
+    print(f&#34;Original y-range: {y_range}&#34;)
+    x_range, y_range = stage(CONFIGS, x_range, y_range)
+    print(f&#34;Final x-range: {x_range}&#34;)
+    print(f&#34;Final y-range: {y_range}&#34;)
+    print(&#34;Converting dataframe to datashader&#34;)
     cvs1 = datashader.Canvas(
         plot_width = CONFIGS.IMAGE_CONFIGS[&#34;WIDTH&#34;],
         plot_height = CONFIGS.IMAGE_CONFIGS[&#34;HEIGHT&#34;],
@@ -100,9 +101,12 @@ def main(CONFIGS):
     print(&#34;Aggregating points&#34;)
     agg1 = cvs1.points(df1, &#39;x&#39;, &#39;y&#39;, datashader.sum(&#39;weight&#39;))
     print(&#34;Shading datashader&#34;)
+    cmap = matplotlib.colormaps[CONFIGS.SHADER_CONFIGS[&#34;COLOR_MAP&#34;]]
+    if CONFIGS.SHADER_CONFIGS[&#34;REVERSED&#34;]:
+        cmap = cmap.reversed()
     img = datashader.transfer_functions.shade(
         agg1,
-        cmap = matplotlib.colormaps[CONFIGS.SHADER_CONFIGS[&#34;COLOR_MAP&#34;]],
+        cmap = cmap,
         span = None if CONFIGS.SHADER_CONFIGS[&#34;HOW&#34;] == &#34;eq_hist&#34; else CONFIGS.SHADER_CONFIGS[&#34;SPAN&#34;],
         how = CONFIGS.SHADER_CONFIGS[&#34;HOW&#34;]
     )
@@ -114,13 +118,22 @@ def main(CONFIGS):
         shape = CONFIGS.SPREAD_CONFIGS[&#34;SHAPE&#34;],
         how = CONFIGS.SPREAD_CONFIGS[&#34;HOW&#34;]
     )
+    print(&#34;Setting up StarScape&#34;)
+    generate_starscape(CONFIGS, x_range, y_range)
     print(&#34;Exporting Image&#34;)
-    img_map(img, CONFIGS.IMAGE_CONFIGS[&#34;NAME&#34;])
+    datashader.utils.export_image(
+        img,
+        CONFIGS.IMAGE_CONFIGS[&#34;NAME&#34;],
+        export_path = f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}&#39;,
+        background = CONFIGS.IMAGE_CONFIGS[&#34;BACKGROUND_COLOR&#34;]
+    )
     print(&#34;Dumping configs&#34;)
     with open(f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}/configs.yml&#39;, &#39;w+&#39;) as output_configs:
         yaml.dump(CONFIGS.CONFIGS, output_configs, sort_keys = False)
     print(&#34;Post processing&#34;)
     post_processing(CONFIGS)
+    print(&#34;Combining starscape and attractor&#34;)
+    combine_starscape(CONFIGS)
     print(&#34;COMPLETE&#34;)
 
 
@@ -136,7 +149,7 @@ if __name__ == &#34;__main__&#34;:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="src.main.main"><code class="name flex">
-<span>def <span class="ident">main</span></span>(<span>CONFIGS)</span>
+<span>def <span class="ident">main</span></span>(<span>CONFIGS: <a title="src.configs.Configs" href="configs.html#src.configs.Configs">Configs</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -144,12 +157,7 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def main(CONFIGS):
-    img_map = functools.partial(
-        datashader.utils.export_image,
-        export_path = f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}&#39;,
-        background = CONFIGS.IMAGE_CONFIGS[&#34;BACKGROUND_COLOR&#34;]
-    )
+<pre><code class="python">def main(CONFIGS: Configs):
     attractor = get_attractor(CONFIGS.ATTRACTOR_CONFIGS[&#34;NAME&#34;])(*CONFIGS.ATTRACTOR_CONFIGS[&#34;ARGS&#34;])
     loading_bar = LoadingBar(CONFIGS.CONFIGS[&#34;ITERATIONS&#34;] - 1, width=40)
     if CONFIGS.CONFIGS[&#34;CUSTOM_COLORMAPS&#34;]:
@@ -177,9 +185,15 @@ if __name__ == &#34;__main__&#34;:
     print(&#34;\nFinished iterating points&#34;)
     print(&#34;Converting point history to dataframe&#34;)
     df1 = pandas.DataFrame(d)
-    print(&#34;Converting dataframe to datashader&#34;)
+    print(&#34;Calculating value ranges&#34;)
     x_range = (min(d[&#39;x&#39;]), max(d[&#39;x&#39;]))
     y_range = (min(d[&#39;y&#39;]), max(d[&#39;y&#39;]))
+    print(f&#34;Original x-range: {x_range}&#34;)
+    print(f&#34;Original y-range: {y_range}&#34;)
+    x_range, y_range = stage(CONFIGS, x_range, y_range)
+    print(f&#34;Final x-range: {x_range}&#34;)
+    print(f&#34;Final y-range: {y_range}&#34;)
+    print(&#34;Converting dataframe to datashader&#34;)
     cvs1 = datashader.Canvas(
         plot_width = CONFIGS.IMAGE_CONFIGS[&#34;WIDTH&#34;],
         plot_height = CONFIGS.IMAGE_CONFIGS[&#34;HEIGHT&#34;],
@@ -189,9 +203,12 @@ if __name__ == &#34;__main__&#34;:
     print(&#34;Aggregating points&#34;)
     agg1 = cvs1.points(df1, &#39;x&#39;, &#39;y&#39;, datashader.sum(&#39;weight&#39;))
     print(&#34;Shading datashader&#34;)
+    cmap = matplotlib.colormaps[CONFIGS.SHADER_CONFIGS[&#34;COLOR_MAP&#34;]]
+    if CONFIGS.SHADER_CONFIGS[&#34;REVERSED&#34;]:
+        cmap = cmap.reversed()
     img = datashader.transfer_functions.shade(
         agg1,
-        cmap = matplotlib.colormaps[CONFIGS.SHADER_CONFIGS[&#34;COLOR_MAP&#34;]],
+        cmap = cmap,
         span = None if CONFIGS.SHADER_CONFIGS[&#34;HOW&#34;] == &#34;eq_hist&#34; else CONFIGS.SHADER_CONFIGS[&#34;SPAN&#34;],
         how = CONFIGS.SHADER_CONFIGS[&#34;HOW&#34;]
     )
@@ -203,13 +220,22 @@ if __name__ == &#34;__main__&#34;:
         shape = CONFIGS.SPREAD_CONFIGS[&#34;SHAPE&#34;],
         how = CONFIGS.SPREAD_CONFIGS[&#34;HOW&#34;]
     )
+    print(&#34;Setting up StarScape&#34;)
+    generate_starscape(CONFIGS, x_range, y_range)
     print(&#34;Exporting Image&#34;)
-    img_map(img, CONFIGS.IMAGE_CONFIGS[&#34;NAME&#34;])
+    datashader.utils.export_image(
+        img,
+        CONFIGS.IMAGE_CONFIGS[&#34;NAME&#34;],
+        export_path = f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}&#39;,
+        background = CONFIGS.IMAGE_CONFIGS[&#34;BACKGROUND_COLOR&#34;]
+    )
     print(&#34;Dumping configs&#34;)
     with open(f&#39;{CONFIGS.FILE_CONFIGS[&#34;PATH&#34;]}/{CONFIGS.FILE_CONFIGS[&#34;ID&#34;]}/configs.yml&#39;, &#39;w+&#39;) as output_configs:
         yaml.dump(CONFIGS.CONFIGS, output_configs, sort_keys = False)
     print(&#34;Post processing&#34;)
     post_processing(CONFIGS)
+    print(&#34;Combining starscape and attractor&#34;)
+    combine_starscape(CONFIGS)
     print(&#34;COMPLETE&#34;)</code></pre>
 </details>
 </dd>
